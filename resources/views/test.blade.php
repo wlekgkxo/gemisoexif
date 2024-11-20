@@ -26,8 +26,6 @@
                     <div class="no-meta-coordinate">
                         <div>좌표 정보가 없어 지도를 표시할 수 없습니다.</div>
                     </div>
-                </div>
-                <div class="drawer">
                     <table class="compass-table">
                         <tbody>
                             <tr>
@@ -159,10 +157,10 @@
                         </table>
                     </div>
                 </div>
-                <div class="meta-drawer">
-                    <pre id="full_meta"></pre>
-                </div>
             </div>
+        </div>
+        <div class="full-meta">
+            <pre id="full_meta"></pre>
         </div>
     </div>
 
@@ -200,15 +198,6 @@
                     form_data = new FormData(test_form);
 
                 const raw_pattern = /\.(cr2|cr3|arw)$/i;
-                
-                /* 기본 썸네일
-                const reader = new FileReader();
-                reader.onload = ({ target }) => {
-                    document.getElementById("preview").src = target.result;
-                };
-                reader.readAsDataURL(file);
-
-                showPreview(); */
 
                 if(!(file.type.startsWith('image/') || file.type.startsWith('video/') || raw_pattern.test(file.name))) {
                     alert('이미지, 동영상 파일만 업로드할 수 있습니다.');
@@ -224,17 +213,42 @@
                             let json_str = result.json_string ?? result;
 
                             document.getElementById("full_meta").innerText = JSON.stringify(json_str, undefined, 2);
-                            document.getElementById("full_meta").style.display = 'block';
+                            document.getElementById("full_meta").style.display = 'flex';
 
-                            document.getElementById("preview").src = result.thumb_path;
-                            showPreview();
+                            if(result.thumb_path) {
+                                document.getElementById("preview").src = result.thumb_path;
+                                showPreview();
+                            } /*  else {
+                                첫번째 방법: 바이너리 데이터 사용
+                                if(result.Thumbnail_image) {
+                                    const thumbnailBase64 = result.Thumbnail_image;
+
+                                    const img = document.createElement('img');
+                                    img.src = `data:${result.MIMEType};base64,${thumbnailBase64}`; // MIME 타입에 따라 다름 (예: image/jpeg, image/png)
+
+                                    console.log(`data:${result.MIMEType};base64,${thumbnailBase64}`);
+                                    // DOM에 추가
+                                    document.getElementById("preview").src = img;
+                                    showPreview();
+                                }
+
+                                두번째 방법: 기본 썸네일
+                                const reader = new FileReader();
+                                reader.onload = ({ target }) => {
+                                    document.getElementById("preview").src = target.result;
+                                };
+                                reader.readAsDataURL(file);
+
+                                showPreview(); 
+                                그러나 둘 다 망함 
+                            } */
 
                             if(result.type === 'image') {
                                 setImageMeta(result);
                             } else if(result.type === 'video') {
                                 setVideoMeta(result);
                             } else {
-                                setRawImageMeta();
+                                setRawImageMeta(result);
                             }
 
                             if(result.latitude && result.longitude) {
@@ -373,7 +387,7 @@
             document.getElementById("custom_datetime").innerText = data.custom_datetime;
             document.getElementById("file_size").innerText = data.FileSize;
             document.getElementById("file_type").innerText = data.FileType;
-            document.getElementById("mime_type").innerText = data.MimeType;
+            document.getElementById("mime_type").innerText = data.MIMEType;
             document.getElementById("image_width").innerText = data.custom_width;
             document.getElementById("image_length").innerText = data.custom_height;
             document.getElementById("x_resolution").innerText = data.XResolution;
@@ -416,7 +430,7 @@
             document.getElementById("custom_datetime").innerText = data.custom_datetime;
             document.getElementById("file_size").innerText = data.FileSize;
             document.getElementById("file_type").innerText = data.FileType;
-            document.getElementById("mime_type").innerText = data.MimeType;
+            document.getElementById("mime_type").innerText = data.MIMEType;
             document.getElementById("image_width").innerText = data.custom_width;
             document.getElementById("image_length").innerText = data.custom_height;
             document.getElementById("x_resolution").innerText = data.XResolution;

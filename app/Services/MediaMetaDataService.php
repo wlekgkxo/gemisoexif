@@ -32,15 +32,15 @@ namespace App\Services;
  * 4. php.ini 파일에서 extension=imagick 넣고 php-cgi 재시작
  * **/
 
+use DateTime;
 use Exception;
-use Intervention\Image\Facades\Image;
 use GuzzleHttp\Client;
 
 use FFMpeg\FFMpeg;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\Exception\RuntimeException;
-
-use PHPExif\Reader\Reader;
+use PHPExif\Exif;
+use Intervention\Image\Facades\Image;
 
 class MediaMetaDataService
 {
@@ -56,7 +56,7 @@ class MediaMetaDataService
                 'ffmpeg.threads' => 12, // 쓰레드 개수
             ]);
 
-            $ffmpeg_open = $ffmpeg->open($video->storage_path);
+            $ffmpeg_open = $ffmpeg->open('.'.$video->storage_path);
             
             $thumb_name = basename(preg_replace('/\.[^.]+$/', '', $video->path)).".jpg";
             $ffmpeg_open->frame(TimeCode::fromSeconds($thumb_sec))
@@ -121,87 +121,99 @@ class MediaMetaDataService
         }
     }
 
-    public function getImageMetaData($image)
-    {
-        $thumb_name = basename(preg_replace('/\.[^.]+$/', '', $image->path)).".jpg";
-
-        $thumb = Image::make($image->storage_path)->resize(500, 500, function ($constraint) {
-            $constraint->aspectRatio(); // 원본 비율 유지
-            $constraint->upsize();      // 이미지 확대 방지
-        });
-
-        // 썸네일 저장
-        $thumb->save(storage_path()
-        .DIRECTORY_SEPARATOR."app"
-        .DIRECTORY_SEPARATOR."public"
-        .DIRECTORY_SEPARATOR."upload"
-        .DIRECTORY_SEPARATOR."thumbs"
-        .DIRECTORY_SEPARATOR.$thumb_name);
-
-        $img_data = Image::make($image->storage_path)->exif();
-
-        $img_data['original'] = $image->original_name;
-
-        if(array_key_exists('GPSLatitude', $img_data) && array_key_exists('GPSLongitude', $img_data)) {
-            $img_data['latitude'] = $this->getGps($img_data["GPSLatitude"], $img_data['GPSLatitudeRef']);
-            $img_data['longitude'] = $this->getGps($img_data["GPSLongitude"], $img_data['GPSLongitudeRef']);
-            $img_data['address'] = $this->getKrLocation($img_data['longitude'], $img_data['latitude'], 'json');
-        }
-
-        $img_data['custom_width'] = $img_data['ImageWidth'] ?? $img_data['COMPUTED']['Width'] ?? '정보없음';
-        $img_data['custom_height'] = $img_data['ImageLength'] ?? $img_data['COMPUTED']['Height'] ?? '정보없음';
-
-        $img_data['custom_datetime'] = array_key_exists('DateTime', $img_data) ? $img_data['DateTime'] : array_key_exists('FileDateTime', $img_data) ? date('Y-m-d H:i:s', $img_data['FileDateTime']) : '정보없음';
-
-        $img_data['thumb_path'] = "/storage/upload/thumbs/".$thumb_name;
-        // $php_exif = exif_read_data($image);
-        // echo "<pre>";
-        // var_dump($php_exif);
-        // echo "</pre>";
-
-        // dd($img_data);
-
-        // $datetime = date('Y-m-d H:i:s', $img_data['FileDateTime']); 시간 안 넘어오면 변환해서라고 쓰려고 놔둠
-
-        // dd($this->getLocation('37.599894', '126.93128', 'json')); 영어 주소
-        // dd($this->getKrLocation('126.93128', '37.599894', 'json')); // 한글 주소
-
-        $img_data['type'] = 'image';
-
-        return response()->json(['meta' => $img_data]);
-    }
-
-    public function getRawImage1Meta($raw_image)
-    {
-        // $imagick = new Imagick($raw_image->storage_path);
-        
-
-        // return response()->json(['meta' => $metadata]);
-    }
-    
-    public function getRawImage2Meta($raw_image)
+    public function getImageMeta($image)
     {
         try {
-            $command = "exiftool -j " . escapeshellarg(storage_path()
-            .DIRECTORY_SEPARATOR."app"
-            .DIRECTORY_SEPARATOR."public"
-            .DIRECTORY_SEPARATOR.str_replace('/', '\\', $raw_image->path));
-            $output = shell_exec($command);
-            $metadata_j = json_decode($output, true);
-            
-            $metadata = $metadata_j[0];
+            $meta_data = $this->setMeta($image, 'image');
+            $meta_data['thumb_path'] = $image->thumbnail;
 
-            $metadata['original'] = $raw_image->original_name;
-            $metadata['type'] = 'raw';
-    
-            //dd($command);
-            dd($metadata);
+            return response()->json(['meta' => $meta_data], JSON_PRETTY_PRINT);
+        } catch(Exception $e) {
+            dd($e->getMessage());
+            return response()->json(['error_message' => $e->getMessage()]);
+        }
+    }
+
+    public function getRawMeta($raw)
+    {
+        try {
+            $meta_data = $this->setMeta($raw, 'raw');
+            $meta_data['thumb_path'] = $raw->thumbnail;
+
+            return response()->json(['meta' => $meta_data], JSON_PRETTY_PRINT);
         } catch(Exception $e) {
             dd($e->getMessage());
             return response()->json(['error_message' => $e->getMessage()]);
         }
     }
     
+    public function setMeta($media, $type)
+    {
+        // $public_path = public_path();
+        // $public_path = preg_replace('/\\\\/', '/', $public_path);
+        // $imagick = new \Imagick($public_path.$media->storage_path);
+        
+        // $resolution = $imagick->getImageResolution();
+        // $xResolution = $resolution['x'];
+        // $yResolution = $resolution['y'];
+
+        // dd($xResolution);
+
+        // exec("exiftool -XResolution -YResolution " . escapeshellarg(storage_path()
+        // .DIRECTORY_SEPARATOR."app"
+        // .DIRECTORY_SEPARATOR."public"
+        // .DIRECTORY_SEPARATOR.str_replace('/', '\\', $media->path)), $output);
+
+        // dd($output);
+
+        // $img_data = Image::make('.'.$media->storage_path)->exif();
+        // dd($img_data);
+
+        // $meta_data_php = exif_read_data('.'.$media->storage_path);
+
+        // dd($meta_data_php);
+
+        $command = "exiftool -j " . escapeshellarg(storage_path()
+        .DIRECTORY_SEPARATOR."app"
+        .DIRECTORY_SEPARATOR."public"
+        .DIRECTORY_SEPARATOR.str_replace('/', '\\', $media->path));
+        $output = shell_exec($command);
+        $metadata_j = json_decode($output, true);
+        
+        $meta_data = $metadata_j[0];
+
+        $meta_data['original'] = $media->original_name;
+
+        if(array_key_exists('GPSLatitude', $meta_data) && array_key_exists('GPSLongitude', $meta_data)) {
+            $meta_data['latitude'] = $this->getGps($meta_data["GPSLatitude"], $meta_data['GPSLatitudeRef']);
+            $meta_data['longitude'] = $this->getGps($meta_data["GPSLongitude"], $meta_data['GPSLongitudeRef']);
+            $meta_data['address'] = $this->getKrLocation($meta_data['longitude'], $meta_data['latitude'], 'json');
+        }
+
+        /* if(is_null($media->thumbnail) && array_key_exists('ThumbnailImage', $meta_data)) {
+            $meta_data['Thumbnail_image'] = base64_encode($meta_data['ThumbnailImage']);
+        } */
+
+        $meta_data['custom_width'] = $meta_data['ImageWidth'] ?? $meta_data['ExifImageWidth'];
+        $meta_data['custom_height'] = $meta_data['ImageHeight'] ?? $meta_data['ExifImageHeight'];
+        
+        $meta_data['custom_datetime'] =  '';
+
+        if(array_key_exists('DateTimeOriginal', $meta_data)) {
+            $meta_data['custom_datetime'] = $meta_data['DateTimeOriginal'];
+            $set_date = DateTime::createFromFormat('Y:m:d H:i:s', $meta_data['custom_datetime']);
+            $meta_data['custom_datetime'] = $set_date->format('Y-m-d H:i:s');
+        } elseif(array_key_exists('FileCreateDate', $meta_data)) {
+            $meta_data['custom_datetime'] = $meta_data['FileCreateDate'];
+            $set_date = DateTime::createFromFormat('Y:m:d H:i:sP', $meta_data['custom_datetime']);
+            $meta_data['custom_datetime'] = $set_date->format('Y-m-d H:i:s');
+        }
+
+        $meta_data['type'] = $type;
+
+        return $meta_data;
+    }
+
     public function getLocation($lat, $lon, $format)
     {
         $client = new Client();
@@ -253,17 +265,28 @@ class MediaMetaDataService
     }
 
     // 받은 GPS 정보 위도, 경도 소숫점으로 변경
-    private function getGps($exifCoord, $hemi)
-    {
-        // 도, 분, 초를 소수로 변환
-        $degrees = count($exifCoord) > 0 ? $this->gps2Num($exifCoord[0]) : 0;
-        $minutes = count($exifCoord) > 1 ? $this->gps2Num($exifCoord[1]) : 0;
-        $seconds = count($exifCoord) > 2 ? $this->gps2Num($exifCoord[2]) : 0;
+    function getGps($dms, $direction) {
+        // DMS 문자열에서 도, 분, 초를 추출
+        preg_match('/(\d+) deg (\d+)\' ([\d.]+)"/', $dms, $matches);
     
-        // 위도 또는 경도가 남쪽이나 서쪽인 경우 부호를 음수로 설정
-        $flip = ($hemi == 'S' || $hemi == 'W') ? -1 : 1;
+        if (count($matches) !== 4) {
+            throw new Exception("Invalid DMS format");
+        }
     
-        return $flip * ($degrees + ($minutes / 60) + ($seconds / 3600));
+        // 도, 분, 초를 숫자로 변환
+        $degrees = (float)$matches[1];
+        $minutes = (float)$matches[2];
+        $seconds = (float)$matches[3];
+    
+        // 십진수로 변환
+        $decimal = $degrees + ($minutes / 60) + ($seconds / 3600);
+    
+        // 방향에 따라 음수 처리
+        if ($direction === 'W' || $direction === 'S') {
+            $decimal *= -1;
+        }
+    
+        return $decimal;
     }
     
     private function gps2Num($coordPart)

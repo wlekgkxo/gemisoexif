@@ -49566,9 +49566,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! c:\Projects\example-exif\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! c:\Projects\example-exif\resources\sass\app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! c:\Projects\example-exif\resources\sass\test.scss */"./resources/sass/test.scss");
+__webpack_require__(/*! c:\Projects\exif-web\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! c:\Projects\exif-web\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! c:\Projects\exif-web\resources\sass\test.scss */"./resources/sass/test.scss");
 
 
 /***/ })
