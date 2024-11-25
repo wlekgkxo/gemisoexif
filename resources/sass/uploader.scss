@@ -1,0 +1,108 @@
+@import 'variables';
+@import 'common.scss';
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+.warp {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #002266;
+    display: block;
+
+    .uploader-header {
+        display: flex;
+        height: 10%;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .left-side {
+            progress {
+                width: 26em;
+                height: 3em;
+            }
+        }
+
+        .right-side {
+            label {
+                display: block;
+                cursor: pointer;
+                margin: 0;
+                color: #EEE;
+            }
+            input {
+                display: none;
+            }
+        }
+    }
+
+    .uploader-body {
+        display: flex;
+        height: 90%;
+        background-color: #FFF;
+
+        /* drag & drop */
+
+        div {
+
+            &.selected-box {
+                display: flex;
+                flex-wrap: wrap;
+                align-content: flex-start;
+                justify-content: flex-start;
+                width: 60%;
+                background-color: #EEE;
+                overflow-y: scroll;
+
+                .select-card {
+                    background-color: #353535;
+                    text-align: center;
+                    position: relative;
+                    flex: 1;
+                    border: 0.2em solid $kick;
+                    span {
+                        cursor: pointer;
+                        img {
+                            max-height: 8em;
+                        }
+                        
+                        &:hover {
+                            img {
+                                opacity:80%;
+                            }
+                        }
+                    }
+
+                    ul {
+                        display: none;
+                        position: absolute;
+                        width: 100%;
+                        top: 0;
+                        left: 0;
+                        padding: 0;
+                        margin: 0;
+                        list-style: none;
+                        text-align: left;
+                        z-index: 10;
+                        background: rgba(0, 0, 0, 0.5);
+                        color: $kick;
+                    }
+
+                }
+            }
+
+            &.preview-box {
+                width: 40%;
+                background-color: #FFF;
+            }
+        }
+    }
+}

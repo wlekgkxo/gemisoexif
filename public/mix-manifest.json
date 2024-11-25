@@ -1,5 +1,8 @@
 {
     "/js/app.js": "/js/app.js",
+    "/css/common.css": "/css/common.css",
     "/css/app.css": "/css/app.css",
-    "/css/test.css": "/css/test.css"
+    "/css/metaset.css": "/css/metaset.css",
+    "/css/mediameta.css": "/css/mediameta.css",
+    "/css/uploader.css": "/css/uploader.css"
 }

@@ -20,12 +20,29 @@ Route::get('/info', function () {
 });
 
 Route::get('/file', function () {
-    return view('test');
+    return view('metaset');
 });
 
-Route::post('/file', 'TestController@getFileMeta');
+Route::get('/uploader', function () {
+    return view('uploader');
+});
+
+Route::get('/meta', function () {
+    return view('mediameta');
+});
 
 Route::get('/celebrity', function () {
     return view('celebrity');
 });
+
+Route::get('/list', 'UploaderController@list');
+
+Route::post('/file', 'TestController@getFileMeta');
+
+Route::post('/upload', 'UploaderController@upload');
+
 Route::post('/whosthatperson', 'CelebrityController@getWho');
+
+Route::post('/requestingest', 'IngestRequestController@requestIngest');
+Route::post('/mediaupload', 'IngestRequestController@mediaUpload');
+Route::post('/removemedia', 'IngestRequestController@ingestQuit');

@@ -1,0 +1,119 @@
+/* custom scrollbar */
+
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.warp {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #002266;
+  display: block;
+}
+
+.warp .uploader-header {
+  display: flex;
+  height: 10%;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.warp .uploader-header .left-side progress {
+  width: 26em;
+  height: 3em;
+}
+
+.warp .uploader-header .right-side label {
+  display: block;
+  cursor: pointer;
+  margin: 0;
+  color: #EEE;
+}
+
+.warp .uploader-header .right-side input {
+  display: none;
+}
+
+.warp .uploader-body {
+  display: flex;
+  height: 90%;
+  background-color: #FFF;
+  /* drag & drop */
+}
+
+.warp .uploader-body div.selected-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: flex-start;
+  width: 60%;
+  background-color: #EEE;
+  overflow-y: scroll;
+}
+
+.warp .uploader-body div.selected-box .select-card {
+  background-color: #353535;
+  text-align: center;
+  position: relative;
+  flex: 1;
+  border: 0.2em solid #F6F6F6;
+}
+
+.warp .uploader-body div.selected-box .select-card span {
+  cursor: pointer;
+}
+
+.warp .uploader-body div.selected-box .select-card span img {
+  max-height: 8em;
+}
+
+.warp .uploader-body div.selected-box .select-card span:hover img {
+  opacity: 80%;
+}
+
+.warp .uploader-body div.selected-box .select-card ul {
+  display: none;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: left;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  color: #F6F6F6;
+}
+
+.warp .uploader-body div.preview-box {
+  width: 40%;
+  background-color: #FFF;
+}
+
