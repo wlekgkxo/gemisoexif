@@ -30,13 +30,16 @@ class FileUploadService
         // filesize
         // getClientOriginalName
         $original_name = $file->getClientOriginalName();
-        $storage_path = env('STORAGE_ROOT').'/image';
+        $image_path = env('STORAGE_ROOT').'/image';
         $file_name = uniqid() . '.' . $file->getClientOriginalExtension();
 
-        $image = $file->move($storage_path, $file_name);
+        $image = $file->move($image_path, $file_name);
 
-        $success['thumb'] = $this->makeThumbnail($image);
-        $success['exif'] = $this->getExif($image);
+        $path = $image->getPathname();
+        $file_name = $image->getFilename();
+
+        $success['thumb'] = $this->makeThumbnail($path, $file_name);
+        $success['exif'] = $this->getExif($path);
 
         dd($success);
         if ($success) {
@@ -46,24 +49,24 @@ class FileUploadService
         }
     }
 
-    public function makeThumbnail($file)
+    public function makeThumbnail($path, $file_name)
     {
-        $storage_path = env('STORAGE_ROOT').'/thumb';
-        $thumb_name = $file->pathname.".jpg";
+        $thumb_path = env('STORAGE_ROOT').'/thumb';
 
-        $thumb = Image::make($file->pathname)->resize(500, 500, function ($constraint) {
+        $thumb = Image::make($path)->resize(500, 500, function ($constraint) {
             $constraint->aspectRatio(); // 원본 비율 유지
             $constraint->upsize();      // 이미지 확대 방지
         });
 
         // 썸네일 저장
-        $thumb->save($storage_path.'/'.$thumb_name);
-        return $thumb_name;
+        $result = $thumb->save($thumb_path.'/'.$file_name);
+
+        return $result;
     }
 
-    public function getExif($file)
+    public function getExif($path)
     {
-        $command = "exiftool -j " . escapeshellarg($file->pathname);
+        $command = "exiftool -j " . escapeshellarg($path);
         $output = shell_exec($command);
         $metadata_j = json_decode($output, true);
 
