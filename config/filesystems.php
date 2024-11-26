@@ -63,6 +63,10 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
+        'network' => [
+            'driver' => 'local',
+            'root' => '\\\\10.189.6.98\\P\\dev_archone\\test-upload',
+        ],
 
     ],
 

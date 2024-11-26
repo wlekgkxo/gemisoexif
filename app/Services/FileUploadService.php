@@ -3,51 +3,41 @@
 namespace App\Services;
 
 use Exception;
-use Illuminate\Http\UploadedFile;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 
-use App\Models\AcMedia;
+use App\Models\Media;
+
+use Carbon\Carbon;
 
 class FileUploadService
 {
-    public function uploadMedia(UploadedFile $file, $directory = 'upload')
+
+    public function uploadMedia($file)
     {
-        try {
-            $original_nm = $file->getClientOriginalName();
-            $check_file = AcMedia::where('original_name', 'LIKE', $original_nm.'%')->count();
-            if($check_file > 0) {
-                $check_file++;
-                $original_nm = $original_nm.' ('.$check_file.')'; 
-            }
+        // $media = (object) [];
 
-            $results = [ 'original_name' => $original_nm,
-                         'path' => $file->store($directory, 'public'),
-                         'extension' => $file->getClientOriginalExtension(),
-                         'upload_user' => '테스트'
-                        ];
-            $results['storage_path'] = '/storage/'.$results['path'];
-    
-            if($directory === 'upload/images' || $directory === 'upload/raws') {
-                $results['thumbnail'] = $this->uploadImageThumb($results);
-                // $results['media_type'] = 1;
-            } elseif($directory === 'upload/videos') {
-                $get_meta = $this->uploadVideoThumbAndMeta($results);
+        // $media->content_id = $this->contentService->setEmptyContent();
+        // $media->storage_id = 139;
+        // $media->media_type = 'ingest_pub';
+        // $media->status = 0;
 
-                $results['thumbnail'] = $get_meta['thumbs'];
-                // $results['media_type'] = 2;
-                $results['media_id'] = AcMedia::setRecord($results);
-                $results['format'] = $get_meta['video_format'];
-                $results['streams'] = $get_meta['video_streams'];
-    
-                return (object) $results;
-            }
+        // $media->created_date = Carbon::now()->format('YmdHis');
+        // $media->expired_date = Carbon::now()->addMonth()->format('YmdHis');
+        // $media->is_file = 1;
 
-            $results['media_id'] = AcMedia::setRecord($results);
+            // path
+        // filesize
+        $network_path = env('STORAGE_ROOT');
+        $file_name = uniqid() . '.' . $file->getClientOriginalExtension();
 
-            return (object) $results;
-        } catch(Exception $e) {
-            dd('file upload fail : '.$e->getMessage());
+        $success = $file->move($network_path, $file_name);
+
+        if ($success) {
+            dd($success);
+            return response()->json(['message' => 'Image saved successfully']);
+        } else {
+            return response()->json(['error' => 'Failed to save image'], 500);
         }
     }
 

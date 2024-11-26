@@ -37,13 +37,16 @@ class IngestRequestController extends Controller
             $extension = $file->getClientOriginalExtension();
             
             if (preg_match($imagePattern, $extension)) {
-                $file_info = $this->fileUploadService->uploadMedia($file, 'upload/images');
+                $file_info = $this->fileUploadService->uploadMedia($file);
+                // $file_info = $this->fileUploadService->uploadMedia($file, 'upload/images');
                 $results[] = ['media' => $file_info, 'static' => $this->mediaMetaService->getImageMeta($file_info)];
             } elseif (preg_match($videoPattern, $extension)) {
-                $file_info = $this->fileUploadService->uploadMedia($file, 'upload/videos');
+                $file_info = $this->fileUploadService->uploadMedia($file);
+                // $file_info = $this->fileUploadService->uploadMedia($file, 'upload/videos');
                 $results[] = ['media' => $file_info, 'static' => $this->mediaMetaService->getVideoMetaData($file_info)];
             } elseif (preg_match($RawImagePattern1, $extension)) {
-                $file_info = $this->fileUploadService->uploadMedia($file, 'upload/raws');
+                $file_info = $this->fileUploadService->uploadMedia($file);
+                // $file_info = $this->fileUploadService->uploadMedia($file, 'upload/raws');
                 $results[] = ['media' => $file_info, 'static' => $this->mediaMetaService->getRawMeta($file_info)];
             } else {
                 throw new Exception('This extension file is not supported');
