@@ -3,71 +3,52 @@
 namespace App\Services;
 
 use Exception;
+use Illuminate\Http\UploadedFile;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
-use Intervention\Image\Facades\Image;
 
-use App\Models\Media;
-
-use Carbon\Carbon;
+use App\Models\AcMedia;
 
 class FileUploadService
 {
-    public function uploadMedia($file)
+    public function uploadMedia(UploadedFile $file, $directory = 'upload')
     {
-        // $media = (object) [];
+        try {
+            $original_nm = $file->getClientOriginalName();
+            $check_file = AcMedia::where('original_name', 'LIKE', $original_nm.'%')->count();
+            if($check_file > 0) {
+                $check_file++;
+                $original_nm = $original_nm.' ('.$check_file.')'; 
+            }
 
-        // $media->content_id = $this->contentService->setEmptyContent();
-        // $media->storage_id = 139;
-        // $media->media_type = 'ingest_pub';
-        // $media->status = 0;
+            $results = [ 'original_name' => $original_nm,
+                         'path' => $file->store($directory, 'public'),
+                         'extension' => $file->getClientOriginalExtension(),
+                         'upload_user' => '테스트'
+                        ];
+            $results['storage_path'] = '/storage/'.$results['path'];
+    
+            if($directory === 'upload/images' || $directory === 'upload/raws') {
+                $results['thumbnail'] = $this->uploadImageThumb($results);
+                // $results['media_type'] = 1;
+            } elseif($directory === 'upload/videos') {
+                $get_meta = $this->uploadVideoThumbAndMeta($results);
 
-        // $media->created_date = Carbon::now()->format('YmdHis');
-        // $media->expired_date = Carbon::now()->addMonth()->format('YmdHis');
-        // $media->is_file = 1;
+                $results['thumbnail'] = $get_meta['thumbs'];
+                // $results['media_type'] = 2;
+                $results['media_id'] = AcMedia::setRecord($results);
+                $results['format'] = $get_meta['video_format'];
+                $results['streams'] = $get_meta['video_streams'];
+    
+                return (object) $results;
+            }
 
-            // path
-        // filesize
-        // getClientOriginalName
-        $original_name = $file->getClientOriginalName();
-        $storage_path = env('STORAGE_ROOT').'/image';
-        $file_name = uniqid() . '.' . $file->getClientOriginalExtension();
+            $results['media_id'] = AcMedia::setRecord($results);
 
-        $image = $file->move($storage_path, $file_name);
-
-        $success['thumb'] = $this->makeThumbnail($image);
-        $success['exif'] = $this->getExif($image);
-
-        dd($success);
-        if ($success) {
-            return response()->json(['message' => 'Image saved successfully']);
-        } else {
-            return response()->json(['error' => 'Failed to save image'], 500);
+            return (object) $results;
+        } catch(Exception $e) {
+            dd('file upload fail : '.$e->getMessage());
         }
-    }
-
-    public function makeThumbnail($file)
-    {
-        $storage_path = env('STORAGE_ROOT').'/thumb';
-        $thumb_name = $file->pathname.".jpg";
-
-        $thumb = Image::make($file->pathname)->resize(500, 500, function ($constraint) {
-            $constraint->aspectRatio(); // 원본 비율 유지
-            $constraint->upsize();      // 이미지 확대 방지
-        });
-
-        // 썸네일 저장
-        $thumb->save($storage_path.'/'.$thumb_name);
-        return $thumb_name;
-    }
-
-    public function getExif($file)
-    {
-        $command = "exiftool -j " . escapeshellarg($file->pathname);
-        $output = shell_exec($command);
-        $metadata_j = json_decode($output, true);
-
-        return $meta_data = $metadata_j[0];
     }
 
     public function uploadImageThumb($image)
