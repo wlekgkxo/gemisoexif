@@ -192,21 +192,21 @@
         });
 
         // document ready
-        // document.addEventListener('DOMContentLoaded', (e) => {
-        //     let progress_request = localStorage.getItem('ingest_media_assets');
+        document.addEventListener('DOMContentLoaded', (e) => {
+            let progress_request = localStorage.getItem('ingest_media_assets');
 
-        //     if(progress_request) {
-        //         if(progress_request !== '') {
-        //             if(!confirm('진행하시던 인제스트 요청 작업이 있습니다. 이어서 하시겠습니까?')) {
-        //                 removeProgressIngest(progress_request);
-        //             } else {
-        //                 stillProgressIngest(progress_request);
-        //             }
-        //         }
-        //     } else {
-        //         localStorage.setItem('ingest_media_assets', '');
-        //     }
-        // });
+            if(progress_request) {
+                if(progress_request !== '') {
+                    if(!confirm('진행하시던 인제스트 요청 작업이 있습니다. 이어서 하시겠습니까?')) {
+                        removeProgressIngest(progress_request);
+                    } else {
+                        stillProgressIngest(progress_request);
+                    }
+                }
+            } else {
+                localStorage.setItem('ingest_media_assets', '');
+            }
+        });
 
         function callUploadMedia(form_data) {
             // media upload 및 정보 가져오기
