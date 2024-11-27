@@ -11,17 +11,9 @@ use App\Models\Media;
 
 use Carbon\Carbon;
 
-use App\Services\MediaMetaDataService;
 
 class FileUploadService
 {
-    private $mediaMetaDataService;
-
-    public function __construct(MediaMetaDataService $mediaMetaDataService)
-    {
-        $this->mediaMetaDataService = $mediaMetaDataService;
-    }
-
     public function uploadMedia($file)
     {
         // $media = (object) [];
@@ -38,21 +30,22 @@ class FileUploadService
             // path
         // filesize
         // getClientOriginalName
-        $original_name = $file->getClientOriginalName();
-        $image_path = env('STORAGE_ROOT').'/image';
+        $results = (object) [];
+        $results->original_name = $file->getClientOriginalName();
+        $image_path = env('STORAGE_UPLOAD').'/image';
         $file_name = uniqid() . '.' . $file->getClientOriginalExtension();
 
         $image = $file->move($image_path, $file_name);
 
-        $path = $image->getPathname();
+        $results->path = $image->getPathname();
         $file_name = $image->getFilename();
 
-        $success['thumb'] = $this->makeThumbnail($path, $file_name);
-        $success['exif'] = $this->getExif($path);
+        $results->thumbnail = $this->makeThumbnail($results->path, $file_name);
 
-        dd($success);
-        if ($success) {
-            return response()->json(['message' => 'Image saved successfully']);
+        // $success['exif'] = $this->getExif($path);
+
+        if ($results) {
+            return $results;
         } else {
             return response()->json(['error' => 'Failed to save image'], 500);
         }
@@ -60,9 +53,9 @@ class FileUploadService
 
     public function makeThumbnail($path, $file_name)
     {
-        $thumb_path = env('STORAGE_ROOT').'/thumb';
+        $thumb_path = env('STORAGE_UPLOAD').'/thumb';
 
-        $thumb = Image::make($path)->resize(200, 0, function ($constraint) {
+        $thumb = Image::make($path)->resize(200, 200, function ($constraint) {
             $constraint->aspectRatio(); // 원본 비율 유지
             $constraint->upsize();      // 이미지 확대 방지
         });
@@ -70,20 +63,18 @@ class FileUploadService
         // 썸네일 저장
         $result = $thumb->save($thumb_path.'/'.$file_name);
 
-        return $result;
+        return env('STORAGE_ROOT').'/thumb/'.$file_name;
     }
 
     public function getExif($path)
     {
-        $metadata = $this->mediaMetaDataService->setMeta($path, 'image');
+        $command = "exiftool -j " . escapeshellarg($path);
+        $output = shell_exec($command);
+        $metadata_j = json_decode($output, true);
 
-        // $command = "exiftool -j " . escapeshellarg($path);
-        // $output = shell_exec($command);
-        // $metadata_j = json_decode($output, true);
+        $metadata = $metadata_j[0];
 
-        // $metadata = $metadata_j[0];
-
-        // $results = (object) [];
+        $results = (object) [];
 
         return $metadata;
     }
