@@ -15,7 +15,7 @@ use App\Services\MediaMetaDataService;
 
 class FileUploadService
 {
-    protected $mediaMetaDataService;
+    private $mediaMetaDataService;
 
     public function __construct(MediaMetaDataService $mediaMetaDataService)
     {
