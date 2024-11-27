@@ -148,10 +148,10 @@ class FileUploadService
             $success = [];
             if($files) {
                 foreach($files as $file) {
-                    if(unlink('.'.$file->media->storage_path)) {
+                    if(unlink($file->media->path)) {
                         unlink('.'.$file->media->thumbnail);
-                        $success[] = $file->media->storage_path;
-                        AcMedia::find($file->media->media_id)->delete();
+                        $success[] = $file->media->path;
+                        // AcMedia::find($file->media->media_id)->delete();
                     }
                 }
 
