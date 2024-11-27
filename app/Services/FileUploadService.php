@@ -57,10 +57,11 @@ class FileUploadService
         // $command = "exiftool -b -ThumbnailImage ".$path." > ".$thumb_file;
         // $output = shell_exec($command);
         // $thumb_j = json_decode($output, true);
+
         // $thumb = $thumb_j[0];
         // return '/storage/upload/thumb/'.$file_name;
 
-        $thumb_path = public_path('storage').'\\upload\\thumb\\';
+        $thumb_path = env('STORAGE_UPLOAD').'/thumb';
 
         $thumb = Image::make($path)->resize(200, 200, function ($constraint) {
             $constraint->aspectRatio(); // 원본 비율 유지
@@ -68,9 +69,9 @@ class FileUploadService
         });
 
         // 썸네일 저장
-        $thumb->save($thumb_path.$file_name);
+        $result = $thumb->save($thumb_path.'/'.$file_name);
 
-        return '/storage/upload/thumb/'.$file_name;
+        return env('STORAGE_ROOT').'/thumb'.$file_name;
     }
 
     public function getExif($path)
