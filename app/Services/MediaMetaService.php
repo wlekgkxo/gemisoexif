@@ -133,7 +133,7 @@ class MediaMetaService
         }
     }
     
-    public function setMeta($path)
+    public function setMeta($media, $type)
     {
         // $public_path = public_path();
         // $public_path = preg_replace('/\\\\/', '/', $public_path);
@@ -162,14 +162,14 @@ class MediaMetaService
         $command = "exiftool -j " . escapeshellarg(storage_path()
         .DIRECTORY_SEPARATOR."app"
         .DIRECTORY_SEPARATOR."public"
-        .DIRECTORY_SEPARATOR.str_replace('/', '\\', $path));
+        .DIRECTORY_SEPARATOR.str_replace('/', '\\', $media->path));
         $output = shell_exec($command);
         $metadata_j = json_decode($output, true);
         
         $meta_data = $metadata_j[0];
 
         $set_data = [];
-        // $set_data['media_id'] = $media->media_id;
+        $set_data['media_id'] = $media->media_id;
         
         if(array_key_exists('DateTimeOriginal', $meta_data)) {
             $set_date = DateTime::createFromFormat('Y:m:d H:i:s', $meta_data['DateTimeOriginal']);

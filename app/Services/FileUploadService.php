@@ -11,10 +11,17 @@ use App\Models\Media;
 
 use Carbon\Carbon;
 
-use App\Services\MediaMetaService;
+use App\Services\MediaMetaDataService;
 
 class FileUploadService
 {
+    protected $mediaMetaDataService;
+
+    public function __construct(MediaMetaDataService $mediaMetaDataService)
+    {
+        $this->mediaMetaDataService = $mediaMetaDataService;
+    }
+
     public function uploadMedia($file)
     {
         // $media = (object) [];
@@ -68,8 +75,7 @@ class FileUploadService
 
     public function getExif($path)
     {
-        $meta_service = new MediaMetaService();
-        $metadata = $meta_service->setMeta($path);
+        $metadata = $this->mediaMetaDataService->setMeta($path, 'image');
 
         // $command = "exiftool -j " . escapeshellarg($path);
         // $output = shell_exec($command);
