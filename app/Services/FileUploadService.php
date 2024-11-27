@@ -15,13 +15,6 @@ use App\Services\MediaMetaService;
 
 class FileUploadService
 {
-    protected $mediaMetaService;
-
-    public function __construct(MediaMetaService $mediaMetaService)
-    {
-        $this->mediaMetaService = $mediaMetaService;
-    }
-
     public function uploadMedia($file)
     {
         // $media = (object) [];
@@ -75,7 +68,8 @@ class FileUploadService
 
     public function getExif($path)
     {
-        $metadata = $this->mediaMetaService->setMeta($path);
+        $meta_service = new MediaMetaService();
+        $metadata = $meta_service->setMeta($path);
 
         // $command = "exiftool -j " . escapeshellarg($path);
         // $output = shell_exec($command);
