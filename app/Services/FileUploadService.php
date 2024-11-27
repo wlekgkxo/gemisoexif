@@ -11,8 +11,17 @@ use App\Models\Media;
 
 use Carbon\Carbon;
 
+use App\Services\MediaMetaService;
+
 class FileUploadService
 {
+    protected $mediaMetaService;
+
+    public function __construct(MediaMetaService $mediaMetaService)
+    {
+        $this->mediaMetaService = $mediaMetaService;
+    }
+
     public function uploadMedia($file)
     {
         // $media = (object) [];
@@ -53,7 +62,7 @@ class FileUploadService
     {
         $thumb_path = env('STORAGE_ROOT').'/thumb';
 
-        $thumb = Image::make($path)->resize(500, 500, function ($constraint) {
+        $thumb = Image::make($path)->resize(200, 0, function ($constraint) {
             $constraint->aspectRatio(); // 원본 비율 유지
             $constraint->upsize();      // 이미지 확대 방지
         });
@@ -66,11 +75,17 @@ class FileUploadService
 
     public function getExif($path)
     {
-        $command = "exiftool -j " . escapeshellarg($path);
-        $output = shell_exec($command);
-        $metadata_j = json_decode($output, true);
+        $metadata = $this->mediaMetaService->setMeta($path);
 
-        return $meta_data = $metadata_j[0];
+        // $command = "exiftool -j " . escapeshellarg($path);
+        // $output = shell_exec($command);
+        // $metadata_j = json_decode($output, true);
+
+        // $metadata = $metadata_j[0];
+
+        // $results = (object) [];
+
+        return $metadata;
     }
 
     public function uploadImageThumb($image)
