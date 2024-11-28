@@ -277,6 +277,31 @@ body, html {
     }
 }
 
+.bland-box {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: $fade;
+    overflow: hidden;
+}
+
+.loading-circle {
+    display: none;
+    width: 5em;
+    height: 5em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    img {
+        user-select: none;
+    }
+}
+
 .top-btn {
     /*display: none;*/
     position: fixed;

@@ -103,7 +103,10 @@
             <!-- </form> -->
         </div>
     </div>
+    <div id="bland_box" class="bland-box"></div>
+    <div id="loading_circle" class="loading-circle"><img src="/assets/load-35_128.gif" alt="now loading..."></div>
     <button type="button" class="top-btn">top</button>
     <script src="{{ asset('js/mediameta.js') }}"></script>
+    <script src="{{ asset('js/mediameta-modal.js') }}"></script>
 </body>
 </html>

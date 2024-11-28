@@ -93,7 +93,6 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var _this = this;
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -151,24 +150,17 @@ document.getElementById('upload_media').addEventListener('change', function (e) 
 // Drag over 상태
 document.getElementById('drag_media').addEventListener('dragover', function (e) {
   e.preventDefault();
-  _this.style.backgroundColor = '#c1c1c1';
+  document.getElementById('drag_media').style.backgroundColor = '#c1c1c1';
 });
 
 // Drag leave 상태
-// document.getElementById('drag_media').addEventListener('dragleave', (e) => {});
+document.getElementById('drag_media').addEventListener('dragleave', function (e) {
+  document.getElementById('drag_media').style.backgroundColor = '#FFF';
+});
 
 // 드래그&드롭 -> 업로드
 document.getElementById('drag_media').addEventListener('drop', function (e) {
   e.preventDefault();
-
-  // console.log('drop');
-  // this.style.backgroundColor = 'white';
-
-  // console.dir(e.dataTransfer);
-
-  // var data = e.dataTransfer.files;
-  // console.dir(data);
-
   var files = e.dataTransfer.files,
     form_data = new FormData();
   if (files.length > 50) alert('파일은 최대 50개만 가능합니다.');
@@ -176,7 +168,7 @@ document.getElementById('drag_media').addEventListener('drop', function (e) {
     form_data.append('files[]', files[i]);
   }
   callUploadMedia(form_data);
-  _this.style.backgroundColor = 'white';
+  document.getElementById('drag_media').style.backgroundColor = '#FFF';
 });
 
 // document ready
@@ -198,10 +190,10 @@ function callUploadMedia(form_data) {
   // media upload 및 정보 가져오기
   var req = new XMLHttpRequest();
   req.upload.addEventListener('progress', progressHandler, false);
-  req.upload.addEventListener("progress", progressHandler, false);
-  req.addEventListener("load", completeHandler, false);
-  req.addEventListener("error", errorHandler, false);
-  req.addEventListener("abort", abortHandler, false);
+  req.upload.addEventListener('progress', progressHandler, false);
+  req.addEventListener('load', completeHandler, false);
+  req.addEventListener('error', errorHandler, false);
+  req.addEventListener('abort', abortHandler, false);
   req.onreadystatechange = function () {
     if (req.readyState === XMLHttpRequest.DONE) {
       if (req.status === 200) {
@@ -228,9 +220,13 @@ function callUploadMedia(form_data) {
 function progressHandler(event) {
   var percent = event.loaded / event.total * 100;
   document.getElementById('progress_bar').value = Math.round(percent);
+  document.getElementById('loading_circle').style.display = 'block';
+  document.getElementById('bland_box').style.display = 'block';
 }
 function completeHandler(event) {
   document.getElementById('progress_bar').value = 0;
+  document.getElementById('loading_circle').style.display = 'none';
+  document.getElementById('bland_box').style.display = 'none';
 }
 function errorHandler(event) {}
 function abortHandler(event) {}

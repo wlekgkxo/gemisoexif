@@ -53,23 +53,17 @@ document.getElementById('upload_media').addEventListener('change', (e) => {
 document.getElementById('drag_media').addEventListener('dragover', (e) => {
     e.preventDefault();
 
-    this.style.backgroundColor = '#c1c1c1';
+    document.getElementById('drag_media').style.backgroundColor = '#c1c1c1';
 });
 
 // Drag leave 상태
-// document.getElementById('drag_media').addEventListener('dragleave', (e) => {});
+document.getElementById('drag_media').addEventListener('dragleave', (e) => {
+    document.getElementById('drag_media').style.backgroundColor = '#FFF';
+});
 
 // 드래그&드롭 -> 업로드
 document.getElementById('drag_media').addEventListener('drop', (e) => {
     e.preventDefault();
-
-    // console.log('drop');
-    // this.style.backgroundColor = 'white';
-
-    // console.dir(e.dataTransfer);
-
-    // var data = e.dataTransfer.files;
-    // console.dir(data);
 
     let files = e.dataTransfer.files,
     form_data = new FormData();
@@ -82,7 +76,7 @@ document.getElementById('drag_media').addEventListener('drop', (e) => {
 
     callUploadMedia(form_data)
 
-    this.style.backgroundColor = 'white';
+    document.getElementById('drag_media').style.backgroundColor = '#FFF';
 });
 
 // document ready
@@ -107,10 +101,10 @@ function callUploadMedia(form_data) {
     let req = new XMLHttpRequest();
 
     req.upload.addEventListener('progress', progressHandler, false);
-    req.upload.addEventListener("progress", progressHandler, false);
-    req.addEventListener("load", completeHandler, false);
-    req.addEventListener("error", errorHandler, false);
-    req.addEventListener("abort", abortHandler, false);
+    req.upload.addEventListener('progress', progressHandler, false);
+    req.addEventListener('load', completeHandler, false);
+    req.addEventListener('error', errorHandler, false);
+    req.addEventListener('abort', abortHandler, false);
 
     req.onreadystatechange = () => {
         if(req.readyState === XMLHttpRequest.DONE) {
@@ -141,12 +135,17 @@ function callUploadMedia(form_data) {
 function progressHandler(event) {
     let percent = (event.loaded / event.total) * 100;
     document.getElementById('progress_bar').value = Math.round(percent);
+    document.getElementById('loading_circle').style.display = 'block';
+    document.getElementById('bland_box').style.display = 'block';
 }
 function completeHandler(event) {
     document.getElementById('progress_bar').value = 0;
+    document.getElementById('loading_circle').style.display = 'none';
+    document.getElementById('bland_box').style.display = 'none';
 }
 function errorHandler(event) {}
-function abortHandler(event) {}
+function abortHandler(event) {
+}
 /* progress bar 관련 */
 
 /* DOMContentLoaded 에서 사용되는 함수들*/

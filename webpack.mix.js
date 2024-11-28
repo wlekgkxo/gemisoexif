@@ -17,4 +17,5 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/metaset.scss', 'public/css')
     .sass('resources/sass/mediameta.scss', 'public/css')
     .sass('resources/sass/uploader.scss', 'public/css')
-    .js('resources/js/mediameta.js', 'public/js');
+    .js('resources/js/mediameta.js', 'public/js')
+    .js('resources/js/mediameta-modal.js', 'public/js');
