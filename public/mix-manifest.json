@@ -4,5 +4,6 @@
     "/css/app.css": "/css/app.css",
     "/css/metaset.css": "/css/metaset.css",
     "/css/mediameta.css": "/css/mediameta.css",
-    "/css/uploader.css": "/css/uploader.css"
+    "/css/uploader.css": "/css/uploader.css",
+    "/js/mediameta.js": "/js/mediameta.js"
 }
