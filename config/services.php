@@ -34,4 +34,7 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
+    'network' => [
+        'url' => env('VIDEO_STORAGE_UPLOAD')
+    ]
 ];

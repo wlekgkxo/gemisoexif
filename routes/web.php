@@ -35,6 +35,10 @@ Route::get('/celebrity', function () {
     return view('celebrity');
 });
 
+Route::get('/tusd', function () {
+    return view('tusd');
+});
+
 Route::get('/list', 'UploaderController@list');
 
 Route::post('/file', 'TestController@getFileMeta');
