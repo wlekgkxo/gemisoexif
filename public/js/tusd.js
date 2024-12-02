@@ -2648,7 +2648,7 @@ document.getElementById('test_file').addEventListener('change', function (e) {
   var url = document.getElementById('hide_url').value,
     file = event.target.files[0];
   var upload = new tus.Upload(file, {
-    endpoint: 'http://localhost:1080/files/',
+    endpoint: url + '/files/',
     // retryDelays: [0, 3000, 5000, 10000, 20000],
     uploadSize: file.size,
     metadata: {
