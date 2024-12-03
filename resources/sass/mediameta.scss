@@ -118,6 +118,15 @@ body, html {
                                     font-weight: 600;
                                 }
 
+                                div.lazy-image {
+                                    min-width: 17.74em;
+                                    min-height: 8em;
+                                    margin: 0;
+                                    background: url('thumb_ing.gif') center center no-repeat;
+                                    background-repeat: no-repeat;
+                                    background-size: 17em 20em;
+                                }
+
                                 ul {
                                     display: flex;
                                     flex-direction: column;

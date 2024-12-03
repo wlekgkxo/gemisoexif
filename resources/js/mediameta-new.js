@@ -33,15 +33,14 @@
 // 클릭 -> 업로드
 document.getElementById('upload_media').addEventListener('change', (e) => {
     let files = event.target.files,
-    form_data = new FormData();
+        form_data = new FormData();
 
     if(files.length > 50) alert('파일은 최대 50개만 가능합니다.');
 
     for(let i = 0; i < files.length; i++) {
-        form_data.append('files[]', files[i]);
+        form_data.append('file', files[i]);
+        callUploadMedia(form_data);
     }
-
-    callUploadMedia(form_data);
 });
 
 // Drag Enter 올려둔 상태
@@ -69,10 +68,9 @@ document.getElementById('drag_media').addEventListener('drop', (e) => {
     if(files.length > 50) alert('파일은 최대 50개만 가능합니다.');
 
     for(let i = 0; i < files.length; i++) {
-        form_data.append('files[]', files[i]);
+        form_data.append('file', files[i]);
+        callUploadMedia(form_data);
     }
-
-    callUploadMedia(form_data)
 
     document.getElementById('drag_media').style.backgroundColor = '#FFF';
 });
@@ -108,17 +106,16 @@ function callUploadMedia(form_data) {
         if(req.readyState === XMLHttpRequest.DONE) {
             if(req.status === 200) {
                 let result = JSON.parse(req.response);
+                let storage_assets = localStorage.getItem('ingest_media_assets');
+                let assets = storage_assets === '' ? [] : JSON.parse(storage_assets);
+                let results = [...assets, ...result],
+                    results_str = JSON.stringify(results);
+                
+                localStorage.setItem('ingest_media_assets', results_str);
 
-                if(!localStorage.getItem('ingest_media_assets')) {
-                    localStorage.setItem('ingest_media_assets', JSON.stringify(result));
-                    pushRecord(result);
-                } else {
-                    let storage_assets = localStorage.getItem('ingest_media_assets'),
-                        assets = JSON.parse(storage_assets);
-                        
-                    localStorage.setItem('ingest_media_assets', JSON.stringify([...result, ...assets]));
-                    pushRecord(result);
-                }
+                let idx = document.getElementById('prepend_row').childElementCount;
+
+                pushRecord(result[0], idx);
             } else {
                 console.log('request error');
             }
@@ -133,13 +130,13 @@ function callUploadMedia(form_data) {
 function progressHandler(event) {
     let percent = (event.loaded / event.total) * 100;
     document.getElementById('progress_bar').value = Math.round(percent);
-    document.getElementById('loading_circle').style.display = 'block';
-    document.getElementById('bland_box').style.display = 'block';
+    // document.getElementById('loading_circle').style.display = 'block';
+    // document.getElementById('bland_box').style.display = 'block';
 }
 function completeHandler(event) {
     document.getElementById('progress_bar').value = 0;
-    document.getElementById('loading_circle').style.display = 'none';
-    document.getElementById('bland_box').style.display = 'none';
+    // document.getElementById('loading_circle').style.display = 'none';
+    // document.getElementById('bland_box').style.display = 'none';
 }
 function errorHandler(event) {}
 function abortHandler(event) {
@@ -152,7 +149,9 @@ function stillProgressIngest() {
     let progress_request = localStorage.getItem('ingest_media_assets'),
         datas = JSON.parse(progress_request);
 
-        pushRecord(datas);
+    for(let i = 0; i < datas.length; i++) {
+        pushRecord(datas[i], i);
+    }
 }
 
 function removeProgressIngest(datas) {
@@ -168,7 +167,7 @@ function removeProgressIngest(datas) {
             if(req.status === 200) {
                 let result = JSON.parse(req.response);
 
-                localStorage.removeItem('ingest_media_assets');
+                localStorage.setItem('ingest_media_assets', '');
             } else {
                 console.log('request error');
             }
@@ -182,13 +181,11 @@ function removeProgressIngest(datas) {
 /* callUploadMedia 에서 사용되는 함수들*/
 
 /* DOM 생성 관련 함수 callUploadMedia 에서 사용 */
-function pushRecord(datas) {
+function pushRecord(data, idx) {
     // 메타 입력 카드 생성
-    let rows = '';
-    for(let i = 0; i < datas.length; i++) {
-        rows += createRecord(datas[i], i);
-    }
-    document.getElementById('prepend_row').insertAdjacentHTML('afterbegin', rows);
+    let rows = createRecord(data, idx);
+
+    document.getElementById('prepend_row').insertAdjacentHTML('beforeend', rows);
     
     /* 분류 시작 */
     let classifies = document.querySelectorAll('.media-class-select');
@@ -328,8 +325,10 @@ function removeDynamicArrayData(idx, name, value) {
 
 // 메타 입력 카드 생성
 function createRecord(data, idx) {
-    let media = data.media,
-        dynamic = {},
+    let thumbnail = data.media.thumbnail,
+        original_name = data.media.original_name;
+
+    let dynamic = {},
         classifies_static = ['미분류','인물사진','풍경사진','무대사진'],
         classif = '',
         categories_static = ['인물','동물','식음료','건물/랜드마크','뷰티/패션','공연','운동','풍경','문화','도심','비즈니스','일러스트/클립아트','기타'],
@@ -343,10 +342,10 @@ function createRecord(data, idx) {
 
     let record = '<tr>'
     + '<td><input type="checkbox" name="check_media_id[]" value="'+idx+'" /></td>'
-    + '<td><img src="'+media.thumbnail+'" /></td>'
+    + '<td><div class="lazy-image"><img src="'+thumbnail+'" /></div></td>'
     + '<td><p>[필수 입력항목]</p>'
     + '<ul><li><span>파일명</span>'
-    + '<span><input type="text" name="file_name_'+idx+'" value="'+media.original_name+'" /></span>'
+    + '<span><input type="text" name="file_name_'+idx+'" value="'+original_name+'" /></span>'
     + '</li><li>'
     + '<span>사진분류</span>'
     + '<span data-midx="'+idx+'">'
@@ -366,7 +365,7 @@ function createRecord(data, idx) {
     categories_static.forEach(category => {
         record += '<label>'
                 + '<input type="checkbox" name="media_categories_'+idx+'[]" class="media-categories"'+checkedMark(categories.includes(category))+' value="'+category+'" />'
-                + category+'</label><label>';
+                + category+'</label>';
         if(wrap_i !== 1 && wrap_i % 3 === 0 ) {
             record += '<br/>';
         }

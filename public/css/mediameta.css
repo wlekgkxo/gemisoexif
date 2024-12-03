@@ -131,6 +131,15 @@ html {
   font-weight: 600;
 }
 
+.warp .body-container div table.meta-table tbody tr td div.lazy-image {
+  min-width: 17.74em;
+  min-height: 8em;
+  margin: 0;
+  background: url(/images/thumb_ing.gif?5072c771746b72656405c4729a95e358) center center no-repeat;
+  background-repeat: no-repeat;
+  background-size: 17em 20em;
+}
+
 .warp .body-container div table.meta-table tbody tr td ul {
   display: flex;
   flex-direction: column;

@@ -81,15 +81,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/js/mediameta.js":
-/*!***********************************!*\
-  !*** ./resources/js/mediameta.js ***!
-  \***********************************/
+/***/ "./resources/js/mediameta-new.js":
+/*!***************************************!*\
+  !*** ./resources/js/mediameta-new.js ***!
+  \***************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -136,9 +136,9 @@ document.getElementById('upload_media').addEventListener('change', function (e) 
     form_data = new FormData();
   if (files.length > 50) alert('파일은 최대 50개만 가능합니다.');
   for (var i = 0; i < files.length; i++) {
-    form_data.append('files[]', files[i]);
+    form_data.append('file', files[i]);
+    callUploadMedia(form_data);
   }
-  callUploadMedia(form_data);
 });
 
 // Drag Enter 올려둔 상태
@@ -162,9 +162,9 @@ document.getElementById('drag_media').addEventListener('drop', function (e) {
     form_data = new FormData();
   if (files.length > 50) alert('파일은 최대 50개만 가능합니다.');
   for (var i = 0; i < files.length; i++) {
-    form_data.append('files[]', files[i]);
+    form_data.append('file', files[i]);
+    callUploadMedia(form_data);
   }
-  callUploadMedia(form_data);
   document.getElementById('drag_media').style.backgroundColor = '#FFF';
 });
 
@@ -195,15 +195,13 @@ function callUploadMedia(form_data) {
     if (req.readyState === XMLHttpRequest.DONE) {
       if (req.status === 200) {
         var result = JSON.parse(req.response);
-        if (!localStorage.getItem('ingest_media_assets')) {
-          localStorage.setItem('ingest_media_assets', JSON.stringify(result));
-          pushRecord(result);
-        } else {
-          var storage_assets = localStorage.getItem('ingest_media_assets'),
-            assets = JSON.parse(storage_assets);
-          localStorage.setItem('ingest_media_assets', JSON.stringify([].concat(_toConsumableArray(result), _toConsumableArray(assets))));
-          pushRecord(result);
-        }
+        var storage_assets = localStorage.getItem('ingest_media_assets');
+        var assets = storage_assets === '' ? [] : JSON.parse(storage_assets);
+        var results = [].concat(_toConsumableArray(assets), _toConsumableArray(result)),
+          results_str = JSON.stringify(results);
+        localStorage.setItem('ingest_media_assets', results_str);
+        var idx = document.getElementById('prepend_row').childElementCount;
+        pushRecord(result[0], idx);
       } else {
         console.log('request error');
       }
@@ -217,13 +215,13 @@ function callUploadMedia(form_data) {
 function progressHandler(event) {
   var percent = event.loaded / event.total * 100;
   document.getElementById('progress_bar').value = Math.round(percent);
-  document.getElementById('loading_circle').style.display = 'block';
-  document.getElementById('bland_box').style.display = 'block';
+  // document.getElementById('loading_circle').style.display = 'block';
+  // document.getElementById('bland_box').style.display = 'block';
 }
 function completeHandler(event) {
   document.getElementById('progress_bar').value = 0;
-  document.getElementById('loading_circle').style.display = 'none';
-  document.getElementById('bland_box').style.display = 'none';
+  // document.getElementById('loading_circle').style.display = 'none';
+  // document.getElementById('bland_box').style.display = 'none';
 }
 function errorHandler(event) {}
 function abortHandler(event) {}
@@ -234,7 +232,9 @@ function stillProgressIngest() {
   // 이어서 정보 입력하기
   var progress_request = localStorage.getItem('ingest_media_assets'),
     datas = JSON.parse(progress_request);
-  pushRecord(datas);
+  for (var i = 0; i < datas.length; i++) {
+    pushRecord(datas[i], i);
+  }
 }
 function removeProgressIngest(datas) {
   // 이어서 정보 입력 안함
@@ -245,7 +245,7 @@ function removeProgressIngest(datas) {
     if (req.readyState === XMLHttpRequest.DONE) {
       if (req.status === 200) {
         var result = JSON.parse(req.response);
-        localStorage.removeItem('ingest_media_assets');
+        localStorage.setItem('ingest_media_assets', '');
       } else {
         console.log('request error');
       }
@@ -258,13 +258,10 @@ function removeProgressIngest(datas) {
 /* callUploadMedia 에서 사용되는 함수들*/
 
 /* DOM 생성 관련 함수 callUploadMedia 에서 사용 */
-function pushRecord(datas) {
+function pushRecord(data, idx) {
   // 메타 입력 카드 생성
-  var rows = '';
-  for (var i = 0; i < datas.length; i++) {
-    rows += createRecord(datas[i], i);
-  }
-  document.getElementById('prepend_row').insertAdjacentHTML('afterbegin', rows);
+  var rows = createRecord(data, idx);
+  document.getElementById('prepend_row').insertAdjacentHTML('beforeend', rows);
 
   /* 분류 시작 */
   var classifies = document.querySelectorAll('.media-class-select');
@@ -307,8 +304,8 @@ function pushRecord(datas) {
   });
 
   // 태그 입력 focus
-  for (var _i = 0; _i < prepend_row.children.length; _i++) {
-    document.getElementById('tag_insert_box_' + _i).addEventListener('click', function () {
+  for (var i = 0; i < prepend_row.children.length; i++) {
+    document.getElementById('tag_insert_box_' + i).addEventListener('click', function () {
       event.target.querySelector('span > input').focus();
     });
   }
@@ -379,8 +376,9 @@ function removeDynamicArrayData(idx, name, value) {
 
 // 메타 입력 카드 생성
 function createRecord(data, idx) {
-  var media = data.media,
-    dynamic = {},
+  var thumbnail = data.media.thumbnail,
+    original_name = data.media.original_name;
+  var dynamic = {},
     classifies_static = ['미분류', '인물사진', '풍경사진', '무대사진'],
     classif = '',
     categories_static = ['인물', '동물', '식음료', '건물/랜드마크', '뷰티/패션', '공연', '운동', '풍경', '문화', '도심', '비즈니스', '일러스트/클립아트', '기타'],
@@ -390,14 +388,14 @@ function createRecord(data, idx) {
     if (dynamic['classif']) classif = dynamic['classif'];
     if (dynamic['categories']) categories = dynamic['categories'];
   }
-  var record = '<tr>' + '<td><input type="checkbox" name="check_media_id[]" value="' + idx + '" /></td>' + '<td><img src="' + media.thumbnail + '" /></td>' + '<td><p>[필수 입력항목]</p>' + '<ul><li><span>파일명</span>' + '<span><input type="text" name="file_name_' + idx + '" value="' + media.original_name + '" /></span>' + '</li><li>' + '<span>사진분류</span>' + '<span data-midx="' + idx + '">' + '<select name="media_class_' + idx + '" class="media-class-select">' + '<option>선택 ▼</option>';
+  var record = '<tr>' + '<td><input type="checkbox" name="check_media_id[]" value="' + idx + '" /></td>' + '<td><div class="lazy-image"><img src="' + thumbnail + '" /></div></td>' + '<td><p>[필수 입력항목]</p>' + '<ul><li><span>파일명</span>' + '<span><input type="text" name="file_name_' + idx + '" value="' + original_name + '" /></span>' + '</li><li>' + '<span>사진분류</span>' + '<span data-midx="' + idx + '">' + '<select name="media_class_' + idx + '" class="media-class-select">' + '<option>선택 ▼</option>';
   classifies_static.forEach(function (classific) {
     record += '<option value="' + classific + '" ' + selectedMark(classif === classific) + '>' + classific + '</option>';
   });
   record += '</select></span>' + '</li><li>' + '<span>카테고리</span>' + '<span data-midx="' + idx + '">';
   var wrap_i = 1;
   categories_static.forEach(function (category) {
-    record += '<label>' + '<input type="checkbox" name="media_categories_' + idx + '[]" class="media-categories"' + checkedMark(categories.includes(category)) + ' value="' + category + '" />' + category + '</label><label>';
+    record += '<label>' + '<input type="checkbox" name="media_categories_' + idx + '[]" class="media-categories"' + checkedMark(categories.includes(category)) + ' value="' + category + '" />' + category + '</label>';
     if (wrap_i !== 1 && wrap_i % 3 === 0) {
       record += '<br/>';
     }
@@ -434,14 +432,14 @@ function selectedMark(select) {
 
 /***/ }),
 
-/***/ 1:
-/*!*****************************************!*\
-  !*** multi ./resources/js/mediameta.js ***!
-  \*****************************************/
+/***/ 2:
+/*!*********************************************!*\
+  !*** multi ./resources/js/mediameta-new.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! c:\Projects\exif-web\resources\js\mediameta.js */"./resources/js/mediameta.js");
+module.exports = __webpack_require__(/*! c:\Projects\exif-web\resources\js\mediameta-new.js */"./resources/js/mediameta-new.js");
 
 
 /***/ })

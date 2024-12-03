@@ -26,6 +26,34 @@ class IngestRequestController extends Controller
     public function mediaUpload(Request $request)
     {
         $results = [];
+        $file = $request->file('file');
+
+        $imagePattern = '/^(jpg|jpeg|png|gif|bmp)$/i';
+        $RawImagePattern1 = '/^(cr2|arw|cr3)$/i';
+        $videoPattern = '/^(mp4|avi|mpeg|mov|wmv|flv|webm)$/i';
+
+        $results = [];
+        $extension = $file->getClientOriginalExtension();
+
+        if (preg_match($imagePattern, $extension)) {
+            $file_info = $this->fileUploadService->uploadMedia($file);
+            $results[] = ['media' => $file_info, 'static' => $this->mediaMetaService->getImageMeta($file_info)];
+        } elseif (preg_match($videoPattern, $extension)) {
+            $file_info = $this->fileUploadService->uploadMedia($file);
+            $results[] = ['media' => $file_info, 'static' => $this->mediaMetaService->getVideoMetaData($file_info)];
+        } elseif (preg_match($RawImagePattern1, $extension)) {
+            $file_info = $this->fileUploadService->uploadMedia($file);
+            $results[] = ['media' => $file_info, 'static' => $this->mediaMetaService->getRawMeta($file_info)];
+        } else {
+            throw new Exception('This extension file is not supported');
+        }
+        // array_reverse($results);
+        return json_encode($results);
+    }
+
+    public function MultiMediaUpload(Request $request)
+    {
+        $results = [];
         $files = $request->file('files');
         
         $imagePattern = '/^(jpg|jpeg|png|gif|bmp)$/i';
