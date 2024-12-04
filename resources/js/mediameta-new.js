@@ -11,7 +11,7 @@ document.getElementById('upload_media').addEventListener('change', (e) => {
 
     for(let i = 0; i < files.length; i++) {
         let idx = checkRecordCnt();
-        document.getElementById('prepend_row').insertAdjacentHTML('beforeend', pushRecord({}, idx));
+        pushRecord({}, idx);
 
         form_data.append('file', files[i]);
         callUploadMedia(form_data, idx);
@@ -65,8 +65,11 @@ function callUploadMedia(form_data, idx) {
                 let result = JSON.parse(req.response);
                 let storage_assets = localStorage.getItem('ingest_media_assets');
                 let assets = storage_assets === '' ? [] : JSON.parse(storage_assets);
-                let results = [...assets, ...result],
-                    results_str = JSON.stringify(results);
+                let results = assets;
+
+                results[idx] = result[0];
+                
+                let results_str = JSON.stringify(results);
                 
                 localStorage.setItem('ingest_media_assets', results_str);
 
@@ -156,6 +159,7 @@ function removeProgressIngest(datas) {
 
 /* DOM 생성 관련 함수 callUploadMedia 에서 사용 */
 function pushRecord(data, idx) {
+
     // 메타 입력 카드 생성
     let rows = createRecord(data, idx);
 
