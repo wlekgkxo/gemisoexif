@@ -11,8 +11,8 @@ document.getElementById('upload_media').addEventListener('change', (e) => {
 
     for(let i = 0; i < files.length; i++) {
         let idx = checkRecordCnt();
-        pushRecord({}, idx);
 
+        pushRecord({}, idx);
         form_data.append('file', files[i]);
         callUploadMedia(form_data, idx);
     }
@@ -29,6 +29,7 @@ document.getElementById('drag_media').addEventListener('drop', (e) => {
 
     for(let i = 0; i < files.length; i++) {
         let idx = checkRecordCnt();
+
         pushRecord({}, idx);
         form_data.append('file', files[i]);
         callUploadMedia(form_data, idx);
@@ -94,27 +95,14 @@ function setData(data, idx) {
 
 /* progress bar 관련 */
 function progressHandler(event, idx) {
-    document.getElementById('progress_bar_'+idx).style.display = 'block';
-
     let percent = (event.loaded / event.total) * 100;
+
+    document.getElementById('progress_bar_'+idx).style.display = 'block';
     document.getElementById('progress_bar_'+idx).value = Math.round(percent);
-    // document.getElementById('loading_circle').style.display = 'block';
-    // document.getElementById('bland_box').style.display = 'block';
-
-    // 아래 두개는 새로고침, 뒤로가기 막기인데 파일 전체 업로드 시작, 끝으로 설정이 필요함
-    // localStorage.setItem('file_uploading', 1);
-    // window.addEventListener('popstate', handlePopstate);
 }
-
 function completeHandler(event, idx) {
     document.getElementById('progress_bar_'+idx).value = 0;
     document.getElementById('progress_bar_'+idx).style.display = 'none';
-    // document.getElementById('loading_circle').style.display = 'none';
-    // document.getElementById('bland_box').style.display = 'none';
-    
-    // 아래 두개는 새로고침, 뒤로가기 막기인데 파일 전체 업로드 시작, 끝으로 설정이 필요함
-    // localStorage.setItem('file_uploading', 0);
-    // window.removeEventListener('popstate', handlePopstate);
 }
 function errorHandler(event) {}
 function abortHandler(event) {}
@@ -416,7 +404,7 @@ function selectedMark(select) {
 }
 /* DOM 생성 관련 함수 callUploadMedia 에서 사용 */
 
-/* 파일 업로드 중 새로고침, 뒤로가기 막기 */
+/* 파일 업로드 중 새로고침, 뒤로가기 막기 - 미구현 */
 function reloadBlock(event) {
     let file_uploading = parseInt(localStorage.getItem('file_uploading'));
 
@@ -427,6 +415,16 @@ function reloadBlock(event) {
             alert("파일 업로드 중에는 새로고침키를 사용할 수 없습니다.");
         }
     }
+}
+
+function checkBeginUpload() {
+    localStorage.setItem('file_uploading', 1);
+    window.addEventListener('popstate', handlePopstate);
+}
+
+function checkDoneUpload() {
+    localStorage.setItem('file_uploading', 0);
+    window.removeEventListener('popstate', handlePopstate);
 }
 
 function handlePopstate(event) {
