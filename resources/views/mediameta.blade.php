@@ -81,9 +81,6 @@
                     <br />
                     <p>파일 업로드</p>
                 </label>
-                <div class="progress-box">
-                    <progress id="progress_bar" value="0" max="100"></progress>
-                </div>
             </div>
             <div class="meta-box">
                 <div class="btn-box">

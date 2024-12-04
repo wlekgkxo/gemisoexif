@@ -1,6 +1,34 @@
-function checkRecordCnt() {
-    return document.getElementById('prepend_row').childElementCount;
-}
+
+// document.getElementById('checked_all').addEventListener('change', (e) => {});
+
+// document.getElementById('ingest_request_call').addEventListener('submit', (e) => {
+//     // 인제스트 요청 버튼 클릭 시, 이미지 정보 Json 파일로 생성 하는 api call
+//     let datas = localStorage.getItem('ingest_media_assets'),
+//         form_data = new FormData();
+
+//     form_data.append('datas', datas);
+
+//     console.log(datas);
+    
+    // media upload 및 정보 가져오기
+    // let req = new XMLHttpRequest();
+
+    // req.onreadystatechange = () => {
+    //     if(req.readyState === XMLHttpRequest.DONE) {
+    //         if(req.status === 200) {
+    //             let result = JSON.parse(req.response);
+
+    //             console.log(result);
+    //         } else {
+    //             console.log('request error');
+    //         }
+    //     } 
+    // }
+
+    // req.open('POST', 'requestingest', true);
+    // // req.responseType = "json";
+    // req.send(form_data);
+// });
 
 // 클릭 -> 업로드
 document.getElementById('upload_media').addEventListener('change', (e) => {
@@ -10,12 +38,24 @@ document.getElementById('upload_media').addEventListener('change', (e) => {
     if(files.length > 50) alert('파일은 최대 50개만 가능합니다.');
 
     for(let i = 0; i < files.length; i++) {
-        let idx = checkRecordCnt();
-        document.getElementById('prepend_row').insertAdjacentHTML('beforeend', pushRecord({}, idx));
-
         form_data.append('file', files[i]);
-        callUploadMedia(form_data, idx);
+        callUploadMedia(form_data);
     }
+});
+
+// Drag Enter 올려둔 상태
+// document.getElementById('drag_media').addEventListener('dragenter', (e) => {});
+
+// Drag over 상태
+document.getElementById('drag_media').addEventListener('dragover', (e) => {
+    e.preventDefault();
+
+    document.getElementById('drag_media').style.backgroundColor = '#c1c1c1';
+});
+
+// Drag leave 상태
+document.getElementById('drag_media').addEventListener('dragleave', (e) => {
+    document.getElementById('drag_media').style.backgroundColor = '#FFF';
 });
 
 // 드래그&드롭 -> 업로드
@@ -28,34 +68,39 @@ document.getElementById('drag_media').addEventListener('drop', (e) => {
     if(files.length > 50) alert('파일은 최대 50개만 가능합니다.');
 
     for(let i = 0; i < files.length; i++) {
-        let idx = checkRecordCnt();
-        pushRecord({}, idx);
         form_data.append('file', files[i]);
-        callUploadMedia(form_data, idx);
+        callUploadMedia(form_data);
     }
 
     document.getElementById('drag_media').style.backgroundColor = '#FFF';
 });
-// Drag over 상태
-document.getElementById('drag_media').addEventListener('dragover', (e) => {
-    e.preventDefault();
-    document.getElementById('drag_media').style.backgroundColor = '#c1c1c1';
-});
-// Drag leave 상태
-document.getElementById('drag_media').addEventListener('dragleave', (e) => {
-    document.getElementById('drag_media').style.backgroundColor = '#FFF';
+
+// document ready
+document.addEventListener('DOMContentLoaded', (e) => {
+    let progress_request = localStorage.getItem('ingest_media_assets');
+
+    if(progress_request) {
+        if(progress_request !== '') {
+            if(!confirm('진행하시던 인제스트 요청 작업이 있습니다. 이어서 하시겠습니까?')) {
+                removeProgressIngest(progress_request);
+            } else {
+                stillProgressIngest(progress_request);
+            }
+        }
+    } else {
+        localStorage.setItem('ingest_media_assets', '');
+    }
+
+    document.addEventListener('keydown', reloadBlock);
 });
 
-function callUploadMedia(form_data, idx) {
+function callUploadMedia(form_data) {
     // media upload 및 정보 가져오기
     let req = new XMLHttpRequest();
 
-    req.upload.addEventListener('progress', (e) => {
-        progressHandler(e, idx);
-    }, false);
-    req.addEventListener('load', (e) => {
-        completeHandler(e, idx);
-    }, false);
+    req.upload.addEventListener('progress', progressHandler, false);
+    req.upload.addEventListener('progress', progressHandler, false);
+    req.addEventListener('load', completeHandler, false);
     req.addEventListener('error', errorHandler, false);
     req.addEventListener('abort', abortHandler, false);
 
@@ -70,9 +115,10 @@ function callUploadMedia(form_data, idx) {
                 
                 localStorage.setItem('ingest_media_assets', results_str);
 
-                setData(result[0], idx);
+                let idx = document.getElementById('prepend_row').childElementCount;
+
+                pushRecord(result[0], idx);
             } else {
-                // document.querySelectorAll('tr[data-rmidx="'+idx+'"]').remove();
                 console.log('request error');
             }
         }
@@ -82,36 +128,24 @@ function callUploadMedia(form_data, idx) {
     // req.responseType = "json";
     req.send(form_data);
 }
-
-function setData(data, idx) {
-    document.querySelector('#thumb_'+idx+' > img').style.display = 'block';
-    document.querySelector('#thumb_'+idx+' > img').src = data.media.thumbnail;
-    document.querySelector('[name="file_name_'+idx+'"]').value = data.media.original_name;
-}
-
 /* progress bar 관련 */
-function progressHandler(event, idx) {
-    document.getElementById('progress_bar_'+idx).style.display = 'block';
-
+function progressHandler(event) {
     let percent = (event.loaded / event.total) * 100;
-    document.getElementById('progress_bar_'+idx).value = Math.round(percent);
+    document.getElementById('progress_bar').value = Math.round(percent);
     // document.getElementById('loading_circle').style.display = 'block';
     // document.getElementById('bland_box').style.display = 'block';
+    localStorage.setItem('file_uploading', 1);
 
-    // 아래 두개는 새로고침, 뒤로가기 막기인데 파일 전체 업로드 시작, 끝으로 설정이 필요함
-    // localStorage.setItem('file_uploading', 1);
-    // window.addEventListener('popstate', handlePopstate);
+    window.addEventListener('popstate', handlePopstate);
 }
 
-function completeHandler(event, idx) {
-    document.getElementById('progress_bar_'+idx).value = 0;
-    document.getElementById('progress_bar_'+idx).style.display = 'none';
+function completeHandler(event) {
+    document.getElementById('progress_bar').value = 0;
     // document.getElementById('loading_circle').style.display = 'none';
     // document.getElementById('bland_box').style.display = 'none';
-    
-    // 아래 두개는 새로고침, 뒤로가기 막기인데 파일 전체 업로드 시작, 끝으로 설정이 필요함
-    // localStorage.setItem('file_uploading', 0);
-    // window.removeEventListener('popstate', handlePopstate);
+    localStorage.setItem('file_uploading', 0);
+
+    window.removeEventListener('popstate', handlePopstate);
 }
 function errorHandler(event) {}
 function abortHandler(event) {}
@@ -299,16 +333,8 @@ function removeDynamicArrayData(idx, name, value) {
 
 // 메타 입력 카드 생성
 function createRecord(data, idx) {
-    let thumbnail = '',
-        original_name = '';
-
-    if('media' in data) {
-        thumbnail = data.media.thumbnail,
+    let thumbnail = data.media.thumbnail,
         original_name = data.media.original_name;
-    }
-
-    let thumb_display = ' style="display: none;"';
-    if(thumbnail !== '') thumb_display = '';
 
     let dynamic = {},
         classifies_static = ['미분류','인물사진','풍경사진','무대사진'],
@@ -322,14 +348,9 @@ function createRecord(data, idx) {
         if(dynamic['categories']) categories = dynamic['categories'];
     }
 
-    let record = '<tr data-rmidx="'+idx+'">'
+    let record = '<tr>'
     + '<td><input type="checkbox" name="check_media_id[]" value="'+idx+'" /></td>'
-    + '<td><div id="thumb_'+idx+'" class="lazy-image">';
-
-    record += '<img src="'+thumbnail+'"'+thumb_display+' />';
-    record += '<progress id="progress_bar_'+idx+'" value="0" max="100"></progress>';
-
-    record += '</div></td>'
+    + '<td><div class="lazy-image"><img src="'+thumbnail+'" /></div></td>'
     + '<td><p>[필수 입력항목]</p>'
     + '<ul><li><span>파일명</span>'
     + '<span><input type="text" name="file_name_'+idx+'" value="'+original_name+'" /></span>'
@@ -429,22 +450,3 @@ function handlePopstate(event) {
     history.pushState(null, '', window.location.href);
 }
 /* 파일 업로드 중 새로고침, 뒤로가기 막기 */
-
-// document ready
-document.addEventListener('DOMContentLoaded', (e) => {
-    let progress_request = localStorage.getItem('ingest_media_assets');
-
-    if(progress_request) {
-        if(progress_request !== '') {
-            if(!confirm('진행하시던 인제스트 요청 작업이 있습니다. 이어서 하시겠습니까?')) {
-                removeProgressIngest(progress_request);
-            } else {
-                stillProgressIngest(progress_request);
-            }
-        }
-    } else {
-        localStorage.setItem('ingest_media_assets', '');
-    }
-
-    document.addEventListener('keydown', reloadBlock);
-});

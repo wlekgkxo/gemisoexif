@@ -125,6 +125,15 @@ body, html {
                                     background: url('thumb_ing.gif') center center no-repeat;
                                     background-repeat: no-repeat;
                                     background-size: 17em 20em;
+
+                                    img {
+                                        margin: 0 auto;
+                                    }
+
+                                    progress {
+                                        display: none;
+                                        margin: 0 auto;
+                                    }
                                 }
 
                                 ul {
@@ -265,11 +274,6 @@ body, html {
                 }
                 input {
                     display: none;
-                }
-
-                .progress-box {
-                    width: 95%;
-                    text-align: right;
                 }
             }
 

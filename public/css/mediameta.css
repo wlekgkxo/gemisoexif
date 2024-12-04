@@ -140,6 +140,15 @@ html {
   background-size: 17em 20em;
 }
 
+.warp .body-container div table.meta-table tbody tr td div.lazy-image img {
+  margin: 0 auto;
+}
+
+.warp .body-container div table.meta-table tbody tr td div.lazy-image progress {
+  display: none;
+  margin: 0 auto;
+}
+
 .warp .body-container div table.meta-table tbody tr td ul {
   display: flex;
   flex-direction: column;
@@ -271,11 +280,6 @@ html {
 
 .warp .body-container div.upload-box input {
   display: none;
-}
-
-.warp .body-container div.upload-box .progress-box {
-  width: 95%;
-  text-align: right;
 }
 
 .warp .body-container div.ingest-box {
