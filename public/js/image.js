@@ -81,15 +81,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/js/mediameta-modal.js":
-/*!*****************************************!*\
-  !*** ./resources/js/mediameta-modal.js ***!
-  \*****************************************/
+/***/ "./resources/js/image.js":
+/*!*******************************!*\
+  !*** ./resources/js/image.js ***!
+  \*******************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -97,14 +97,14 @@
 
 /***/ }),
 
-/***/ 4:
-/*!***********************************************!*\
-  !*** multi ./resources/js/mediameta-modal.js ***!
-  \***********************************************/
+/***/ 1:
+/*!*************************************!*\
+  !*** multi ./resources/js/image.js ***!
+  \*************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! c:\Projects\exif-web\resources\js\mediameta-modal.js */"./resources/js/mediameta-modal.js");
+module.exports = __webpack_require__(/*! c:\Projects\exif-web\resources\js\image.js */"./resources/js/image.js");
 
 
 /***/ })

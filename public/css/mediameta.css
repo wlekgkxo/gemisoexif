@@ -1,3 +1,66 @@
+h3 {
+  width: 90%;
+  margin: 0 auto 0.5em;
+  font-size: 1em;
+  color: #353535;
+}
+
+table {
+  width: 90%;
+  margin: 0 auto 0.5em;
+  border: 0.1em solid #5D5D5D;
+  border-collapse: collapse;
+}
+
+table thead tr {
+  border-bottom: 0.1em solid #000;
+}
+
+table thead tr th {
+  background-color: #EAEAEA;
+  padding: 0.5em 0;
+  text-align: center;
+}
+
+table tbody {
+  font-size: 0.9em;
+}
+
+table tbody tr {
+  border-bottom: 0.1em solid #5D5D5D;
+}
+
+table tbody tr th {
+  width: 13%;
+  text-align: left;
+  border-left: 0.1em solid #5D5D5D;
+  border-right: 0.1em solid #5D5D5D;
+  background-color: #EAEAEA;
+  padding: 0 0 0 0.5em;
+}
+
+table tbody tr td {
+  padding: 0.5em;
+  margin: 0.2em;
+}
+
+table tbody tr td input {
+  padding: 0.5em;
+}
+
+table tbody tr td input[type=text] {
+  width: 80%;
+}
+
+table tbody tr td input[type=file] {
+  display: none;
+}
+
+table tbody tr select {
+  min-width: 10em;
+  padding: 0.5em;
+}
+
 /* custom scrollbar */
 
 ::-webkit-scrollbar {
@@ -59,67 +122,12 @@ html {
   margin-bottom: 3em;
 }
 
-.warp .body-container div h3 {
-  width: 90%;
-  margin: 0 auto 0.5em;
-  font-size: 1em;
-  color: #353535;
-}
-
-.warp .body-container div table {
-  width: 90%;
-  margin: 0 auto 0.5em;
-  border: 0.1em solid #5D5D5D;
-  border-collapse: collapse;
-}
-
-.warp .body-container div table tbody {
-  font-size: 0.9em;
-}
-
-.warp .body-container div table tbody tr {
-  border-bottom: 0.1em solid #5D5D5D;
-}
-
-.warp .body-container div table tbody tr th {
-  width: 13%;
-  text-align: left;
-  border-left: 0.1em solid #5D5D5D;
-  border-right: 0.1em solid #5D5D5D;
-  background-color: #EAEAEA;
-  padding: 0 0 0 0.5em;
-}
-
-.warp .body-container div table tbody tr td {
-  padding: 0.5em;
-  margin: 0.2em;
-}
-
-.warp .body-container div table tbody tr td input {
-  padding: 0.5em;
-}
-
-.warp .body-container div table tbody tr select {
-  min-width: 10em;
-  padding: 0.5em;
-}
-
 .warp .body-container div table.client-table tbody tr td input {
   width: 80%;
 }
 
 .warp .body-container div table.meta-table {
   font-size: 0.9em;
-}
-
-.warp .body-container div table.meta-table thead tr {
-  border-bottom: 0.1em solid #000;
-}
-
-.warp .body-container div table.meta-table thead tr th {
-  background-color: #EAEAEA;
-  padding: 0.5em 0;
-  text-align: center;
 }
 
 .warp .body-container div table.meta-table tbody tr td {
@@ -146,7 +154,6 @@ html {
 
 .warp .body-container div table.meta-table tbody tr td div.lazy-image progress {
   display: none;
-  margin: 0 auto;
 }
 
 .warp .body-container div table.meta-table tbody tr td ul {

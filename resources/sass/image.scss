@@ -1,0 +1,190 @@
+@import 'common';
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+form.representative-form, form.additional-form {
+    display: none;
+}
+
+.warp {
+    padding: 0;
+    margin: 0;
+
+    .content-box {
+        width: 90%;
+        margin: 2em auto 0;
+
+        .content-title {
+            width: 90%;
+            display: flex;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 0 auto 0.5em;
+
+            h3 {
+                width: auto;
+                margin: 0;
+            }
+
+            button {
+                padding: 0.3em 0.5em;
+                font-size: 0.8em;
+                cursor: pointer;
+            }
+        }
+        table {
+            tbody {
+                tr {
+                    &:first-child {
+                        td {
+                            width: 40%;
+                        }
+                    }
+                    
+                    &:nth-child(2) {
+                        td {
+                            padding: 0.2em;
+                        }
+                    }
+
+                    td {
+                        .representative-image {
+                            display: block;
+                            width: 13em;
+                            min-height: 9em;
+                            background: url('icon-image-upload-24.png');
+                            background-repeat: no-repeat;
+                            filter: invert(100%);
+                            background-color: #212121;
+                            background-position: center;
+                        }
+
+                        div.representative-place {
+                            display: flex;
+                            flex-direction: row;
+                            flex-wrap: nowrap;
+                            padding: 0;
+
+                            div {
+                                padding: 0.3em;
+                            
+                                &.representative-description {
+                                    &:last-child {
+                                        button {
+                                            padding: 1em;
+                                            cursor: pointer;
+
+                                            &:last-child {
+                                                margin-left: 0.2em;
+                                            }
+                                        }
+
+                                        ul {
+                                            padding: 0 0 0 1.4em;
+                                            margin: 0;
+                                            font-size: 0.9em;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .upload-file-btn {
+                            display: block;
+                            width: 5em;
+                            padding: 0.5em;
+                            cursor: pointer;
+                            border: 0.1em solid #5D5D5D;
+                            background-color: #F6F6F6;
+                            font-size: 0.9em;
+
+                            &:hover {
+                                background-color: #EAEAEA;
+                            }
+                        }
+
+                        .upload-file-box {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            margin: 0.3em 0 0;
+
+                            div {
+                                display: flex;
+                                align-items: center;
+                                margin: 0 0 0.2em;
+
+                                &:last-child {
+                                    margin: 0;
+                                }
+
+                                div {
+                                    &:first-child {
+                                        width: 20em;
+                                        text-overflow: ellipsis;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                    }
+                                    
+                                    &:nth-child(2) {
+                                        width: 5em;
+                                        text-align: right;
+                                    }
+
+                                    &:nth-child(3) {
+                                        progress {
+                                            height: 2em;
+                                            width: 6em;
+                                            border-radius: 0em;
+                                        }
+                                    }
+                                }
+                                
+                                button {
+                                    width: 2em;
+                                    height: 2em;
+                                    padding: 0.1em 0 0 0;
+                                    margin-left: 0.3em;
+                                    border-radius: 1em;
+                                    border: 0.1em solid #5D5D5D;
+                                    color: #5D5D5D;
+                                    cursor: pointer;
+                                    font-weight: 600;
+
+                                    &:hover {
+                                        background: #D5D5D5;
+                                    }
+                                }
+                            }
+                        }
+
+                        &.remove-row {
+                            border-left: 0.1em solid #D5D5D5;
+                            background: #EAEAEA;
+                            cursor: pointer;
+
+                            .trash-icons {
+                                display: block;
+                                width: 2em;
+                                height: 2em;
+                                background: url('trash.png');
+                                filter: invert(100%);
+                                background-size: 2em;
+                                border: 0;
+                                outline: none;
+                            }
+
+                            &:hover {
+                                background: #D5D5D5;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}

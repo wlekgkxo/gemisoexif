@@ -49559,6 +49559,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/sass/image.scss":
+/*!***********************************!*\
+  !*** ./resources/sass/image.scss ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./resources/sass/mediameta.scss":
 /*!***************************************!*\
   !*** ./resources/sass/mediameta.scss ***!
@@ -49593,9 +49604,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ 0:
-/*!***************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/common.scss ./resources/sass/app.scss ./resources/sass/metaset.scss ./resources/sass/mediameta.scss ./resources/sass/uploader.scss ***!
-  \***************************************************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/common.scss ./resources/sass/app.scss ./resources/sass/metaset.scss ./resources/sass/mediameta.scss ./resources/sass/uploader.scss ./resources/sass/image.scss ***!
+  \*******************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -49604,7 +49615,8 @@ __webpack_require__(/*! c:\Projects\exif-web\resources\sass\common.scss */"./res
 __webpack_require__(/*! c:\Projects\exif-web\resources\sass\app.scss */"./resources/sass/app.scss");
 __webpack_require__(/*! c:\Projects\exif-web\resources\sass\metaset.scss */"./resources/sass/metaset.scss");
 __webpack_require__(/*! c:\Projects\exif-web\resources\sass\mediameta.scss */"./resources/sass/mediameta.scss");
-module.exports = __webpack_require__(/*! c:\Projects\exif-web\resources\sass\uploader.scss */"./resources/sass/uploader.scss");
+__webpack_require__(/*! c:\Projects\exif-web\resources\sass\uploader.scss */"./resources/sass/uploader.scss");
+module.exports = __webpack_require__(/*! c:\Projects\exif-web\resources\sass\image.scss */"./resources/sass/image.scss");
 
 
 /***/ })

@@ -1,3 +1,69 @@
+@import 'variables';
+
+@mixin inputField() {
+    padding: 0.5em;
+}
+
+h3 {
+    width: 90%;
+    margin: 0 auto 0.5em;
+    font-size: 1em;
+    color: #353535;
+}
+
+table {
+    width: 90%;
+    margin: 0 auto 0.5em;
+    border: 0.1em solid #5D5D5D;
+    border-collapse: collapse;
+
+    thead {
+        tr {
+            border-bottom: 0.1em solid #000;
+
+            th {
+                background-color: #EAEAEA;
+                padding: 0.5em 0;
+                text-align: center;
+            }
+        }
+    }
+
+    tbody {
+        font-size: 0.9em;
+        tr {
+            border-bottom: 0.1em solid #5D5D5D;
+            th {
+                width: 13%;
+                text-align: left;
+                border-left: 0.1em solid #5D5D5D;
+                border-right: 0.1em solid #5D5D5D;
+                background-color: #EAEAEA;
+                padding: 0 0 0 0.5em;
+            }
+
+            td {
+                padding: 0.5em;
+                margin: 0.2em;
+
+                input {
+                    @include inputField();
+                }
+                input[type=text] {
+                    width: 80%;
+                }
+                input[type=file] {
+                    display: none;
+                }
+            }
+            select {
+                min-width: 10em;
+                padding: 0.5em;
+            }
+        }
+    }
+}
+
 /* custom scrollbar */
 ::-webkit-scrollbar {
     width: 20px;

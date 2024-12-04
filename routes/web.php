@@ -31,6 +31,10 @@ Route::get('/meta', function () {
     return view('mediameta');
 });
 
+Route::get('/image', function () {
+    return view('image');
+});
+
 Route::get('/celebrity', function () {
     return view('celebrity');
 });

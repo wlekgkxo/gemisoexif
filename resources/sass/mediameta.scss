@@ -1,13 +1,8 @@
-@import 'variables';
-@import 'common.scss';
+@import 'common';
 
 body, html {
     padding: 0;
     margin: 0;
-}
-
-@mixin inputField() {
-    padding: 0.5em;
 }
 
 .warp {
@@ -40,206 +35,151 @@ body, html {
         div {
             margin-bottom: 3em;
 
-            h3 {
-                width: 90%;
-                margin: 0 auto 0.5em;
-                font-size: 1em;
-                color: #353535;
+            table.client-table {
+                tbody {
+                    tr {
+                        td {
+                            input {
+                                width: 80%;
+                            }
+                        }
+                    }
+                }
             }
 
-            table {
-                width: 90%;
-                margin: 0 auto 0.5em;
-                border: 0.1em solid #5D5D5D;
-                border-collapse: collapse;
+            table.meta-table {
+                font-size: 0.9em;
 
                 tbody {
-                    font-size: 0.9em;
                     tr {
-                        border-bottom: 0.1em solid #5D5D5D;
-                        th {
-                            width: 13%;
-                            text-align: left;
-                            border-left: 0.1em solid #5D5D5D;
-                            border-right: 0.1em solid #5D5D5D;
-                            background-color: #EAEAEA;
-                            padding: 0 0 0 0.5em;
-                        }
-
                         td {
-                            padding: 0.5em;
-                            margin: 0.2em;
+                            text-align: center;
 
-                            input {
-                                @include inputField();
+                            p {
+                                text-align: left;
+                                font-weight: 600;
                             }
-                        }
-                        select {
-                            min-width: 10em;
-                            padding: 0.5em;
-                        }
-                    }
-                }
 
-                &.client-table {
-                    tbody {
-                        tr {
-                            td {
-                                input {
-                                    width: 80%;
-                                }
-                            }
-                        }
-                    }
-                }
+                            div.lazy-image {
+                                min-width: 17.74em;
+                                min-height: 8em;
+                                margin: 0;
+                                background: url('thumb_ing.gif') center center no-repeat;
+                                background-repeat: no-repeat;
+                                background-size: 17em 20em;
 
-                &.meta-table {
-                    font-size: 0.9em;
-
-                    thead {
-                        tr {
-                            border-bottom: 0.1em solid #000;
-
-                            th {
-                                background-color: #EAEAEA;
-                                padding: 0.5em 0;
-                                text-align: center;
-                            }
-                        }
-                    }
-
-                    tbody {
-                        tr {
-                            td {
-                                text-align: center;
-
-                                p {
-                                    text-align: left;
-                                    font-weight: 600;
+                                img {
+                                    margin: 0 auto;
                                 }
 
-                                div.lazy-image {
-                                    min-width: 17.74em;
-                                    min-height: 8em;
-                                    margin: 0;
-                                    background: url('thumb_ing.gif') center center no-repeat;
-                                    background-repeat: no-repeat;
-                                    background-size: 17em 20em;
-
-                                    img {
-                                        margin: 0 auto;
-                                    }
-
-                                    progress {
-                                        display: none;
-                                        margin: 0 auto;
-                                    }
+                                progress {
+                                    display: none;
                                 }
+                            }
 
-                                ul {
+                            ul {
+                                display: flex;
+                                flex-direction: column;
+                                padding: 0;
+                                margin: 0;
+                                list-style: none;
+                                text-align: left;
+
+                                li {
                                     display: flex;
-                                    flex-direction: column;
-                                    padding: 0;
-                                    margin: 0;
-                                    list-style: none;
-                                    text-align: left;
+                                    flex-direction: row;
+                                    align-items: center;
+                                    padding: 0.5em 0;
 
-                                    li {
-                                        display: flex;
-                                        flex-direction: row;
-                                        align-items: center;
-                                        padding: 0.5em 0;
+                                    &>span {
+                                        &:first-child {
+                                            width: 11%;
+                                        }
 
-                                        &>span {
-                                            &:first-child {
-                                                width: 11%;
-                                            }
+                                        &.textarea-box {
+                                            width: 40%;
+                                        }
 
-                                            &.textarea-box {
-                                                width: 40%;
-                                            }
+                                        textarea {
+                                            width: 100%;
+                                            height: 6em;
+                                        }
 
-                                            textarea {
-                                                width: 100%;
-                                                height: 6em;
-                                            }
-
-                                            &.tag-insert-box {
+                                        &.tag-insert-box {
+                                            display: flex;
+                                            flex-wrap: wrap;
+                                            flex-direction: row;
+                                            justify-content: flex-start;
+                                            width: 20.2em;
+                                            height: 6em;
+                                            overflow-y: scroll;
+                                            border: 0.1em solid #000;
+                                            
+                                            .tag-blocks {
                                                 display: flex;
-                                                flex-wrap: wrap;
                                                 flex-direction: row;
+                                                flex-wrap: wrap;
                                                 justify-content: flex-start;
-                                                width: 20.2em;
-                                                height: 6em;
-                                                overflow-y: scroll;
-                                                border: 0.1em solid #000;
-                                                
-                                                .tag-blocks {
-                                                    display: flex;
-                                                    flex-direction: row;
-                                                    flex-wrap: wrap;
-                                                    justify-content: flex-start;
-                                                    align-content: flex-start;
-                                                    align-items: center;
-                                                    margin: 0;
+                                                align-content: flex-start;
+                                                align-items: center;
+                                                margin: 0;
 
-                                                    span {
-                                                        background-color: #002266;
+                                                span {
+                                                    background-color: #002266;
+                                                    color: #EAEAEA;
+                                                    border: 0.1em solid #EAEAEA;
+
+                                                    p, button {
+                                                        display: inline-block;
+                                                        padding: 0.2em 0.5em;
+                                                        margin: 0;
+                                                        white-space: nowrap;
+                                                        font-weight: 100;
+                                                        font-size: 0.8em;
+                                                    }
+
+                                                    button {
+                                                        background: rgba(0, 0, 0, 0);
+                                                        border: 0;
+                                                        outline: none;
                                                         color: #EAEAEA;
-                                                        border: 0.1em solid #EAEAEA;
+                                                        margin-left: 0.2em;
+                                                        border-left: 0.1em solid #EAEAEA;
+                                                    }
+                                                    
+                                                    &:last-child {
+                                                        background: $none;
+                                                        padding: 0;
+                                                        margin: 0;
+                                                        border: 0;
 
-                                                        p, button {
-                                                            display: inline-block;
-                                                            padding: 0.2em 0.5em;
-                                                            margin: 0;
-                                                            white-space: nowrap;
-                                                            font-weight: 100;
-                                                            font-size: 0.8em;
-                                                        }
-
-                                                        button {
-                                                            background: rgba(0, 0, 0, 0);
+                                                        input {
+                                                            width: 3em;
                                                             border: 0;
+                                                            vertical-align: middle;
                                                             outline: none;
-                                                            color: #EAEAEA;
-                                                            margin-left: 0.2em;
-                                                            border-left: 0.1em solid #EAEAEA;
-                                                        }
-                                                        
-                                                        &:last-child {
-                                                            background: $none;
                                                             padding: 0;
-                                                            margin: 0;
-                                                            border: 0;
-
-                                                            input {
-                                                                width: 3em;
-                                                                border: 0;
-                                                                vertical-align: middle;
-                                                                outline: none;
-                                                                padding: 0;
-                                                                margin-left: 0.3em;
-                                                                font-size: 0.8em;
-                                                            }
+                                                            margin-left: 0.3em;
+                                                            font-size: 0.8em;
                                                         }
                                                     }
                                                 }
-
                                             }
-                                        }
-                                        
-                                        .sh-world {
-                                            display: inline;
-                                            font-size: 1.2em;
-                                            color: #afafaf;
-                                            font-weight: 600;
-                                            padding: 0;
-                                            margin: 0 0.3em 0 0;
-                                        }
 
-                                        &.category-list {
-                                            display: flex;
                                         }
+                                    }
+                                    
+                                    .sh-world {
+                                        display: inline;
+                                        font-size: 1.2em;
+                                        color: #afafaf;
+                                        font-weight: 600;
+                                        padding: 0;
+                                        margin: 0 0.3em 0 0;
+                                    }
+
+                                    &.category-list {
+                                        display: flex;
                                     }
                                 }
                             }

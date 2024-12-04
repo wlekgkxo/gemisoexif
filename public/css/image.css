@@ -1,0 +1,256 @@
+h3 {
+  width: 90%;
+  margin: 0 auto 0.5em;
+  font-size: 1em;
+  color: #353535;
+}
+
+table {
+  width: 90%;
+  margin: 0 auto 0.5em;
+  border: 0.1em solid #5D5D5D;
+  border-collapse: collapse;
+}
+
+table thead tr {
+  border-bottom: 0.1em solid #000;
+}
+
+table thead tr th {
+  background-color: #EAEAEA;
+  padding: 0.5em 0;
+  text-align: center;
+}
+
+table tbody {
+  font-size: 0.9em;
+}
+
+table tbody tr {
+  border-bottom: 0.1em solid #5D5D5D;
+}
+
+table tbody tr th {
+  width: 13%;
+  text-align: left;
+  border-left: 0.1em solid #5D5D5D;
+  border-right: 0.1em solid #5D5D5D;
+  background-color: #EAEAEA;
+  padding: 0 0 0 0.5em;
+}
+
+table tbody tr td {
+  padding: 0.5em;
+  margin: 0.2em;
+}
+
+table tbody tr td input {
+  padding: 0.5em;
+}
+
+table tbody tr td input[type=text] {
+  width: 80%;
+}
+
+table tbody tr td input[type=file] {
+  display: none;
+}
+
+table tbody tr select {
+  min-width: 10em;
+  padding: 0.5em;
+}
+
+/* custom scrollbar */
+
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+form.representative-form,
+form.additional-form {
+  display: none;
+}
+
+.warp {
+  padding: 0;
+  margin: 0;
+}
+
+.warp .content-box {
+  width: 90%;
+  margin: 2em auto 0;
+}
+
+.warp .content-box .content-title {
+  width: 90%;
+  display: flex;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0 auto 0.5em;
+}
+
+.warp .content-box .content-title h3 {
+  width: auto;
+  margin: 0;
+}
+
+.warp .content-box .content-title button {
+  padding: 0.3em 0.5em;
+  font-size: 0.8em;
+  cursor: pointer;
+}
+
+.warp .content-box table tbody tr:first-child td {
+  width: 40%;
+}
+
+.warp .content-box table tbody tr:nth-child(2) td {
+  padding: 0.2em;
+}
+
+.warp .content-box table tbody tr td .representative-image {
+  display: block;
+  width: 13em;
+  min-height: 9em;
+  background: url(/images/icon-image-upload-24.png?4503d9fe01c96568fdb9b00e81a44ad1);
+  background-repeat: no-repeat;
+  filter: invert(100%);
+  background-color: #212121;
+  background-position: center;
+}
+
+.warp .content-box table tbody tr td div.representative-place {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  padding: 0;
+}
+
+.warp .content-box table tbody tr td div.representative-place div {
+  padding: 0.3em;
+}
+
+.warp .content-box table tbody tr td div.representative-place div.representative-description:last-child button {
+  padding: 1em;
+  cursor: pointer;
+}
+
+.warp .content-box table tbody tr td div.representative-place div.representative-description:last-child button:last-child {
+  margin-left: 0.2em;
+}
+
+.warp .content-box table tbody tr td div.representative-place div.representative-description:last-child ul {
+  padding: 0 0 0 1.4em;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.warp .content-box table tbody tr td .upload-file-btn {
+  display: block;
+  width: 5em;
+  padding: 0.5em;
+  cursor: pointer;
+  border: 0.1em solid #5D5D5D;
+  background-color: #F6F6F6;
+  font-size: 0.9em;
+}
+
+.warp .content-box table tbody tr td .upload-file-btn:hover {
+  background-color: #EAEAEA;
+}
+
+.warp .content-box table tbody tr td .upload-file-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0.3em 0 0;
+}
+
+.warp .content-box table tbody tr td .upload-file-box div {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0.2em;
+}
+
+.warp .content-box table tbody tr td .upload-file-box div:last-child {
+  margin: 0;
+}
+
+.warp .content-box table tbody tr td .upload-file-box div div:first-child {
+  width: 20em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.warp .content-box table tbody tr td .upload-file-box div div:nth-child(2) {
+  width: 5em;
+  text-align: right;
+}
+
+.warp .content-box table tbody tr td .upload-file-box div div:nth-child(3) progress {
+  height: 2em;
+  width: 6em;
+  border-radius: 0em;
+}
+
+.warp .content-box table tbody tr td .upload-file-box div button {
+  width: 2em;
+  height: 2em;
+  padding: 0.1em 0 0 0;
+  margin-left: 0.3em;
+  border-radius: 1em;
+  border: 0.1em solid #5D5D5D;
+  color: #5D5D5D;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.warp .content-box table tbody tr td .upload-file-box div button:hover {
+  background: #D5D5D5;
+}
+
+.warp .content-box table tbody tr td.remove-row {
+  border-left: 0.1em solid #D5D5D5;
+  background: #EAEAEA;
+  cursor: pointer;
+}
+
+.warp .content-box table tbody tr td.remove-row .trash-icons {
+  display: block;
+  width: 2em;
+  height: 2em;
+  background: url(/images/trash.png?07616ca09ab3e536aa13ed6ef0d680c2);
+  filter: invert(100%);
+  background-size: 2em;
+  border: 0;
+  outline: none;
+}
+
+.warp .content-box table tbody tr td.remove-row:hover {
+  background: #D5D5D5;
+}
+
