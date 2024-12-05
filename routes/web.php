@@ -56,4 +56,6 @@ Route::post('/mediaupload', 'IngestRequestController@mediaUpload');
 Route::post('/removemedia', 'IngestRequestController@ingestQuit');
 
 Route::post('/file_upload', 'ImageController@fileUpload');
+Route::post('/image_upload', 'ImageController@imageUpload');
 Route::post('/file_delete', 'ImageController@fileDelete');
+

@@ -22,6 +22,12 @@ class ImageController extends Controller
         // array_reverse($results);
         return json_encode($this->fileUploadService->uploadFile($file, 'file'));
     }
+    public function imageUpload(Request $request)
+    {
+        $file = $request->file('file');
+
+        return json_encode($this->fileUploadService->uploadMedia($file, 'image'));
+    }
 
     public function fileDelete(Request $request)
     {

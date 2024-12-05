@@ -148,7 +148,7 @@
 
                 form_data.append('file', file);
 
-                fileUpload(form_data, idx, 'r');
+                mediaUpload(form_data, idx);
             });
             // Drag over 상태
             document.getElementById('representative_image_drop_'+idx).addEventListener('dragover', (e) => {
@@ -164,7 +164,7 @@
 
                 form_data.append('file', file);
 
-                fileUpload(form_data, idx, 'r');
+                mediaUpload(form_data, idx);
             });
             /* 파일 클릭 시 끝 */
         }
@@ -215,7 +215,6 @@
                     if(req.status === 200) {
                         let result = JSON.parse(req.response);
 
-                        if(type === 'r') rCompleteResult(result, idx);
                         if(type === 'a') aCompleteResult(result, idx, num);
                     } else {
                         console.log('request error');
@@ -224,6 +223,33 @@
             }
 
             req.open('POST', 'file_upload', true);
+            // req.responseType = "json";
+            req.send(form_data);
+        }
+        function mediaUpload(form_data, idx, type = 'r', num = 0) {
+            // media upload 및 정보 가져오기
+            let req = new XMLHttpRequest();
+            req.upload.addEventListener('progress', (e) => {
+                progressHandler(e, idx, type, num);
+            }, false);
+            req.addEventListener('load', (e) => {
+                completeHandler(e, idx, type, num);
+            }, false);
+            req.addEventListener('error', errorHandler, false);
+            req.addEventListener('abort', abortHandler, false);
+
+            req.onreadystatechange = () => {
+                if(req.readyState === XMLHttpRequest.DONE) {
+                    if(req.status === 200) {
+                        let result = JSON.parse(req.response);
+                        rCompleteResult(result, idx);
+                    } else {
+                        console.log('request error');
+                    }
+                }
+            }
+
+            req.open('POST', 'image_upload', true);
             // req.responseType = "json";
             req.send(form_data);
         }

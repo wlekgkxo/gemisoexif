@@ -21,6 +21,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/test', '/file', '/whosthatperson', '/upload', 
         '/removemedia', '/mediaupload', '/requestingest', '/multimediaupload', 
-        '/file_upload', '/file_delete'
+        '/file_upload', '/file_delete', 'image_upload'
     ];
 }
