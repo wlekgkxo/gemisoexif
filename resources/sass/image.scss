@@ -47,51 +47,84 @@ form.representative-form, form.additional-form {
                     &:nth-child(2) {
                         td {
                             padding: 0.2em;
-                        }
-                    }
 
-                    td {
-                        .representative-image {
-                            display: block;
-                            width: 13em;
-                            min-height: 9em;
-                            background: url('icon-image-upload-24.png');
-                            background-repeat: no-repeat;
-                            filter: invert(100%);
-                            background-color: #212121;
-                            background-position: center;
-                        }
+                            div.representative-place {
+                                display: flex;
+                                flex-direction: row;
+                                flex-wrap: nowrap;
+                                padding: 0;
 
-                        div.representative-place {
-                            display: flex;
-                            flex-direction: row;
-                            flex-wrap: nowrap;
-                            padding: 0;
+                                > div {
+                                    position: relative;
+                                    z-index: 9;
+                                    padding: 0.3em;
 
-                            div {
-                                padding: 0.3em;
-                            
-                                &.representative-description {
-                                    &:last-child {
-                                        button {
-                                            padding: 1em;
-                                            cursor: pointer;
+                                    .representative-upload-thumb {
+                                        position: relative;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        width: 13em;
+                                        min-height: 9em;
+                                        background: url('icon-image-upload-24.png');
+                                        background-repeat: no-repeat;
+                                        filter: invert(100%);
+                                        background-color: #212121;
+                                        background-position: center;
+                                    }
+                                
+                                    .representative-image {
+                                        display: block;
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        width: 13em;
+                                        min-height: 9em;
+                                        background: rgba(0, 0, 0, 0);
+                                    }
 
-                                            &:last-child {
-                                                margin-left: 0.2em;
+                                    &.representative-description {
+                                        &:last-child {
+                                            button {
+                                                padding: 1em;
+                                                cursor: pointer;
+
+                                                &:last-child {
+                                                    margin-left: 0.2em;
+                                                }
+                                            }
+
+                                            ul {
+                                                padding: 0 0 0 1.4em;
+                                                margin: 0;
+                                                font-size: 0.9em;
                                             }
                                         }
+                                    }
 
-                                        ul {
-                                            padding: 0 0 0 1.4em;
-                                            margin: 0;
-                                            font-size: 0.9em;
-                                        }
+                                    progress {
+                                        display: none;
+                                        position: absolute;
+                                        top: 60%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                    }
+
+                                    img {
+                                        max-width: 12.9em;
+                                        max-height: 9em;
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
                                     }
                                 }
                             }
                         }
+                    }
 
+                    td {
                         .upload-file-btn {
                             display: block;
                             width: 5em;
@@ -135,10 +168,20 @@ form.representative-form, form.additional-form {
                                     }
 
                                     &:nth-child(3) {
+                                        position: relative;
                                         progress {
                                             height: 2em;
                                             width: 6em;
                                             border-radius: 0em;
+                                        }
+                                        .progress-percent {
+                                            display: block;
+                                            position: absolute;
+                                            top: 50%;
+                                            left: 50%;
+                                            transform: translate(-50%, -50%);
+                                            z-index: 9;
+                                            user-select: none;
                                         }
                                     }
                                 }

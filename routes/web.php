@@ -54,3 +54,6 @@ Route::post('/whosthatperson', 'CelebrityController@getWho');
 Route::post('/requestingest', 'IngestRequestController@requestIngest');
 Route::post('/mediaupload', 'IngestRequestController@mediaUpload');
 Route::post('/removemedia', 'IngestRequestController@ingestQuit');
+
+Route::post('/file_upload', 'ImageController@fileUpload');
+Route::post('/file_delete', 'ImageController@fileDelete');

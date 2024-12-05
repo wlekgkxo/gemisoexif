@@ -14,7 +14,7 @@ use Carbon\Carbon;
 
 class FileUploadService
 {
-    public function uploadMedia($file)
+    public function uploadMedia($file, $type)
     {
         // $media = (object) [];
 
@@ -32,17 +32,39 @@ class FileUploadService
         // getClientOriginalName
         $results = (object) [];
         $results->original_name = $file->getClientOriginalName();
-        $image_path = env('STORAGE_UPLOAD').'/image';
+        $file_path = env('STORAGE_UPLOAD').'/'.$type;
         $file_name = uniqid() . '.' . $file->getClientOriginalExtension();
 
-        $image = $file->move($image_path, $file_name);
+        $file_info = $file->move($file_path, $file_name);
 
-        $results->path = $image->getPathname();
-        $file_name = $image->getFilename();
+        $results->path = $file_info->getPathname();
+        $file_name = $file_info->getFilename();
 
-        $results->thumbnail = $this->makeThumbnail($results->path, $file_name);
+        if($type === 'image') $results->thumbnail = $this->makeThumbnail($results->path, $file_name);
 
         // $success['exif'] = $this->getExif($path);
+
+        if ($results) {
+            return $results;
+        } else {
+            return response()->json(['error' => 'Failed to save image'], 500);
+        }
+    }
+
+    public function uploadFile($file, $type)
+    {
+        $results = (object) [];
+        $results->original_name = $file->getClientOriginalName();
+        $file_path = env('STORAGE_UPLOAD').'/'.$type;
+        $file_name = uniqid() . '.' . $file->getClientOriginalExtension();
+
+        $file_info = $file->move($file_path, $file_name);
+
+        $results->path = $file_info->getPathname();
+        $file_name = $file_info->getFilename();
+        $results->size = $file_info->getSize();
+
+        $results->thumbnail = env('STORAGE_ROOT').'/file/'.$file_name;
 
         if ($results) {
             return $results;
@@ -157,6 +179,22 @@ class FileUploadService
 
                 return $success;
             }
+        } catch(Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    public function deleteFile($path)
+    {
+        try {
+            $success = [];
+            if($path) {
+                if(unlink($path)) {
+                    $success[] = $path;
+                }
+            }
+
+            return $success;
         } catch(Exception $e) {
             dd($e->getMessage());
         }

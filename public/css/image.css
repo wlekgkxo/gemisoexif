@@ -131,8 +131,24 @@ form.additional-form {
   padding: 0.2em;
 }
 
-.warp .content-box table tbody tr td .representative-image {
-  display: block;
+.warp .content-box table tbody tr:nth-child(2) td div.representative-place {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  padding: 0;
+}
+
+.warp .content-box table tbody tr:nth-child(2) td div.representative-place > div {
+  position: relative;
+  z-index: 9;
+  padding: 0.3em;
+}
+
+.warp .content-box table tbody tr:nth-child(2) td div.representative-place > div .representative-upload-thumb {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 13em;
   min-height: 9em;
   background: url(/images/icon-image-upload-24.png?4503d9fe01c96568fdb9b00e81a44ad1);
@@ -142,30 +158,47 @@ form.additional-form {
   background-position: center;
 }
 
-.warp .content-box table tbody tr td div.representative-place {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  padding: 0;
+.warp .content-box table tbody tr:nth-child(2) td div.representative-place > div .representative-image {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 13em;
+  min-height: 9em;
+  background: rgba(0, 0, 0, 0);
 }
 
-.warp .content-box table tbody tr td div.representative-place div {
-  padding: 0.3em;
-}
-
-.warp .content-box table tbody tr td div.representative-place div.representative-description:last-child button {
+.warp .content-box table tbody tr:nth-child(2) td div.representative-place > div.representative-description:last-child button {
   padding: 1em;
   cursor: pointer;
 }
 
-.warp .content-box table tbody tr td div.representative-place div.representative-description:last-child button:last-child {
+.warp .content-box table tbody tr:nth-child(2) td div.representative-place > div.representative-description:last-child button:last-child {
   margin-left: 0.2em;
 }
 
-.warp .content-box table tbody tr td div.representative-place div.representative-description:last-child ul {
+.warp .content-box table tbody tr:nth-child(2) td div.representative-place > div.representative-description:last-child ul {
   padding: 0 0 0 1.4em;
   margin: 0;
   font-size: 0.9em;
+}
+
+.warp .content-box table tbody tr:nth-child(2) td div.representative-place > div progress {
+  display: none;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.warp .content-box table tbody tr:nth-child(2) td div.representative-place > div img {
+  max-width: 12.9em;
+  max-height: 9em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .warp .content-box table tbody tr td .upload-file-btn {
@@ -211,10 +244,26 @@ form.additional-form {
   text-align: right;
 }
 
+.warp .content-box table tbody tr td .upload-file-box div div:nth-child(3) {
+  position: relative;
+}
+
 .warp .content-box table tbody tr td .upload-file-box div div:nth-child(3) progress {
   height: 2em;
   width: 6em;
   border-radius: 0em;
+}
+
+.warp .content-box table tbody tr td .upload-file-box div div:nth-child(3) .progress-percent {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
 .warp .content-box table tbody tr td .upload-file-box div button {
